@@ -138,28 +138,11 @@ asset_id,asset_name,display_name_en,description_en
 1343271787,DA_Emote_WaterBottleEmpty_00,Water Bottle Empty,
 1054405158,DA_Emote_Yes,Yes,
 -630317570,DA_Emote_YouComeAtMe_00,You Come At Me,
--541195755,DA_EnemyType_BullCrab,Leaper,
 -1616729167,DA_EnemyType_Chonk,Bastion,
 -1311527696,DA_EnemyType_ChonkPlatform_Mortar,Bombardier,
 -1524715377,DA_EnemyType_EliteDrone_Flamethrower,Firefly,
-903845622,DA_EnemyType_HeavyDroneMissile,Rocketeer,
-1639912088,DA_EnemyType_HeavyDrone_Laser,Vaporizer,
-664422097,DA_EnemyType_LightDroneElite,Hornet,
-672378114,DA_EnemyType_LightDrone_02,Wasp,
--400146311,DA_EnemyType_Monolith,ARC Turbine,
--1166795672,DA_EnemyType_Peppermint,Queen,
--1562077677,DA_EnemyType_Pinger,Spotter,
-1143392102,DA_EnemyType_RollBot,ARC Surveyor,
-299263764,DA_EnemyType_RollBot_Flamethrower,Fireball,
--504231823,DA_EnemyType_RollBot_Pop,Pop,
--1780443771,DA_EnemyType_Rollbot_Boom,Comet,
-2015925366,DA_EnemyType_Runner,Shredder,
--1122989322,DA_EnemyType_Sniper,Sentinel,
-1786451563,DA_EnemyType_SnitchDrone,Snitch,
 -688136541,DA_EnemyType_SnitchDrone_Onboarding,Snitch,
-1225943433,DA_EnemyType_Spearmint,Matriarch,
--352140120,DA_EnemyType_Tick,Tick,
-913532953,DA_EnemyType_TurretEnemy,Turret,
+1639912088,DA_HeavyDrone_Laser_Utility,Vaporizer,
 -1101416870,DA_Inventory_AugmentContainer,,
 54581186,DA_Inventory_BonusStashContainer_T0,Stash,
 -379442490,DA_Inventory_BonusStashContainer_T1,Stash,
@@ -693,11 +676,6 @@ asset_id,asset_name,display_name_en,description_en
 9197506,DA_Item_Armor_LightBody,Light Shield,A lightweight shield that blocks a small portion of incoming damage without impacting mobility.
 -2097404337,DA_Item_Armor_MediumBody,Medium Shield,A standard shield that blocks a medium portion of incoming damage at a moderate cost to mobility.
 -380745354,DA_Item_Armorpack,Surge Shield Recharger,A handheld kit that recharges a shield on use.
-607122405,DA_Item_AssaultRifle_Bullpup_01,Tempest,Has moderate fire rate and accuracy.
--2005124131,DA_Item_AssaultRifle_Burst_01,Arpeggio,Has decent damage output and accuracy.
-1293279143,DA_Item_AssaultRifle_Heavy_01,Bettina,Has slow fire rate and high damage output.
-1361649590,DA_Item_AssaultRifle_LowTier_01,Rattler,"A cheap offensive option, but has to be reloaded 2 bullets at a time."
-287628378,DA_Item_AssaultRifle_Pneumatic_01,Kettle,"Quick and accurate, but has low bullet velocity and takes a long time to reload."
 -935249204,DA_Item_AssemblyStation_01,Refiner,Crucial companion for any Raider finding themselves in frequent need of custom parts.
 50992628,DA_Item_Augment_Combat_T1,Combat Mk. 1,"Basic combat augment. Supports stronger shields, but with limited backpack capacity and Quick Use slots."
 -1489261627,DA_Item_Augment_Combat_T2,Combat Mk. 2,A combat augment more focused on maneuverability than absorbing damage.
@@ -717,9 +695,6 @@ asset_id,asset_name,display_name_en,description_en
 -735920468,DA_Item_Augment_Utility_T3_Smoke,Tactical Mk. 3 (Smoke),"An upgraded version of the Tactical MK. 2 augment, adding expanded capacity across the board."
 411757406,DA_Item_BasicMeleeWeapon,Raider Tool,
 753263571,DA_Item_BasicStickyGrenade,Snap Blast Grenade,"A grenade that sticks to surfaces, dealing explosive damage after a short delay."
--1180768360,DA_Item_BattleRifle_BreachAction_01,Ferro,"Packs a punch, but must be reloaded between every shot."
-582868715,DA_Item_BattleRifle_EnergyBurst_01,Aphelion,Fires high velocity energy rounds.
-1503794034,DA_Item_BattleRifle_LeverAction_01,Renegade,"Lever-action battle rifle with high damage output, accuracy, and headshot damage."
 -92567848,DA_Item_ChamberStation_ArmorBench_02,Gear Bench,The Gear Bench lets you craft Shields and Augments — provided you have the right resources.
 -1093740163,DA_Item_ChamberStation_ArmorBench_03,Gear Bench,The Gear Bench lets you craft Shields and Augments — provided you have the right resources.
 1517102401,DA_Item_ChamberStation_AssemblyStation_02,Refiner,Crucial companion for any Raider finding themselves in frequent need of custom parts.
@@ -742,7 +717,6 @@ asset_id,asset_name,display_name_en,description_en
 721769094,DA_Item_Consumable_PricklyPear,Prickly Pear,Can be consumed for a small amount of stamina.
 1962618186,DA_Item_Consumable_Resin,Resin,Can be used to gradually restore a small amount of health over time.
 -34507507,DA_Item_Consumable_ShieldOverTimePack,Shield Recharger,A handheld kit that gradually recharges shield over time.
--2085450547,DA_Item_CrashPad,Crash Mat,"A throwable emergency landing device, to soften some heavy landings."
 1979925731,DA_Item_Currency_BattlePassPoints,Cred,Used to claim Raider Deck rewards. Earned by completing Feats.
 -265967374,DA_Item_Currency_ExpeditionReward,,
 941631263,DA_Item_Currency_Hard,Raider Tokens,Used to purchase decks and cosmetics.
@@ -757,13 +731,8 @@ asset_id,asset_name,display_name_en,description_en
 -2015224878,DA_Item_Currency_SubwayPromoC,,
 -86227440,DA_Item_Currency_WinterEvent,Merits,
 -1688501435,DA_Item_Defibrillator,Defibrillator,An injection that quickly revives downed raiders and restores some health.
-1671732587,DA_Item_DeployableBarricade,Barricade Kit,A deployable cover that can block incoming damage until it breaks.
-1228913912,DA_Item_Deployable_JumpMine_Explosive,Explosive Mine,"A proximity-triggered mine that pops up and explodes, dealing damage to anything within its radius."
-1117029558,DA_Item_Deployable_RemoteFlareTrap,Remote Raider Flare,"A deployable device that, when manually triggered, launches a Raider Distress Flare."
-2028871781,DA_Item_Deployable_SoundTrap,Noisemaker,A deployable proximity sensor that sounds an alarm when enemy Raiders are detected.
 697558734,DA_Item_DoTGrenade,Blaze Grenade,"A grenade that detonates on impact, covering an area in fire that deals damage over time."
 -699310837,DA_Item_DoorBlocker,Door Blocker,A locking mechanism that can be placed on large metal doors to limit access.
--828273506,DA_Item_EmitterTrap_TeslaCoil,Surge Coil,A deployable device that periodically electrifies the area around itself and briefly stuns anything caught within it.
 1619184001,DA_Item_EnergyAmmo,Energy Clip,Ammo used for energy weapons. One clip will fully charge a single weapon.
 -518683794,DA_Item_ExplosiveBench_01,Explosives Station,Craft your grenades and mines here. Very carefully.
 -823752633,DA_Item_Firecrackers,Firecracker,A device that sparks and pops in a pleasant manner.
@@ -772,12 +741,10 @@ asset_id,asset_name,display_name_en,description_en
 1261688505,DA_Item_Gadget_Instrument_Shaker,Shaker,"A rhythmic instrument used to attract ARC's attention, and impress other Raiders."
 -898439395,DA_Item_GrindCurrency,Coins,Used to buy gear from Traders. Earned by selling loot and completing quests.
 787027311,DA_Item_HEGrenade,Heavy Fuze Grenade,"A grenade that detonates after a delay, dealing explosive damage in its radius."
--1945077813,DA_Item_HandCannon_SingleAction_01,Anvil,"Has high damage output and headshot damage, but slow handling."
 1827408349,DA_Item_HealingHoT_Improvised,Herbal Bandage,An improvised medical item that gradually restores health over time.
 951468812,DA_Item_HealingHoT_Medium,Sterilized Bandage,A medical item that gradually restores a large amount health over time.
 583877119,DA_Item_HealingHoT_Small,Bandage,A medical item that gradually restores health over time.
 -1662947648,DA_Item_HealthCloud,,
-2041238290,DA_Item_HealthPack_01,Vita Shot,A medical item that restores a large amount of health.
 1795670982,DA_Item_HealthSpray,Vita Spray,A medical item that continuously restores health during use. Can be used on yourself or your allies.
 -1402742438,DA_Item_HeavyAmmo,Heavy Ammo,
 1180461632,DA_Item_HomingMissile,,
@@ -788,21 +755,10 @@ asset_id,asset_name,display_name_en,description_en
 1140794731,DA_Item_ItemBench_01,Utility Station,"Utility items are the bread and butter of any well-rounded Raider kit. Lures, grenades, barricades—craft them all here."
 1553081706,DA_Item_ItemBench_02,Utility Station,"Utility items are the bread and butter of any well-rounded Raider kit. Lures, grenades, barricades—craft them all here."
 1160802326,DA_Item_ItemBench_03,Utility Station,"Utility items are the bread and butter of any well-rounded Raider kit. Lures, grenades, barricades—craft them all here."
--643273323,DA_Item_JoltMine,Jolt Mine,A proximity-triggered mine that pops up and stuns anything within its radius.
--100594742,DA_Item_JumpMine_Impulse,Pulse Mine,A proximity-triggered mine that pops up and knocks back anything within its radius.
-458133629,DA_Item_JumpMine_StaminaDoT,Gas Mine,A proximity-triggered mine that pops up and deploys a gas cloud that rapidly drains stamina.
 -902952774,DA_Item_KeyItem_RaiderHatchKey,Raider Hatch Key,Unlocks a Raider Hatch.
--1448953711,DA_Item_LMG_Medium_01,Torrente,"Has a large ammo capacity, but is only accurate while crouched."
--1996442482,DA_Item_LaserTrap_DoTGrenade,Blaze Grenade Trap,A laser trip wire that detonates a Blaze Grenade.
-1117674957,DA_Item_LaserTrap_SmokeGrenade,Smoke Grenade Trap,A laser trip wire that detonates a Smoke Grenade.
--871523219,DA_Item_LaserTrap_StaminaDoT,Gas Grenade Trap,A laser trip wire that detonates a Gas Grenade.
-305351814,DA_Item_LaserTrap_ThrowableDecoy,Lure Grenade Trap,A laser trip wire that detonates a Lure Grenade.
 562831704,DA_Item_LauncherAmmo,Launcher Ammo,Anti-ARC payloads used mainly by the Hullcracker.
--1247702575,DA_Item_Launcher_AntiArc_Medium_01,Hullcracker,Fires explosive projectiles that only detonate when hitting ARC.
-979354624,DA_Item_Launcher_AntiArc_SingleShot_01,Rascal,
 -1875547390,DA_Item_LightAmmo,Light Ammo,
 313013500,DA_Item_MediumAmmo,Medium Ammo,
--28450091,DA_Item_MetalDetector_01,Dockmaster's Detector,"These detectors seem to be able to locate foreign objects buried in the sands around Riven Tides, though their exact way of functioning is unknown."
 -413627600,DA_Item_NPC_Apollo,Apollo,"When he's not dealing in explosives, Apollo is an avid flute player, so pray he won't blow his fingers off."
 2114319598,DA_Item_NPC_Bilguun,Bilguun,"Bilguun, brilliant Engineer. He may be a dismissive grump at times, but he's relentless and his ability to improvise and craft in the field is unmatched."
 -1431231910,DA_Item_NPC_Celeste,Celeste,"A survivor of the First Wave, Celeste now tries to keep Speranza running smoothly. It's an entirely different challenge."
@@ -811,9 +767,6 @@ asset_id,asset_name,display_name_en,description_en
 1529697069,DA_Item_NPC_Posh,Posh,
 -284744277,DA_Item_NPC_Shani,Shani,"Shani fights an uphill battle to keep Speranza safe. She could use a hand, but don't look at her sideways."
 -509224542,DA_Item_NPC_TianWen,Tian Wen,"Some call Tian Wen the ""gun nut"", but that's just half the truth. She also has a supernatural knack for tech and construction."
--1369397808,DA_Item_Pistol_01,Burletta,Has decent damage output and accuracy.
--2011391235,DA_Item_Pistol_HighPower_01,Venator,Fires two shots at a time.
-151930098,DA_Item_Pistol_Silenced_01,Hairpin,"Has a built-in silencer. Great for stealth, but tricky in combat."
 -1840090314,DA_Item_PotionStation_01,Medical Lab,The Medical Lab is where you can create stimulants to give you that extra boost out in the wilds.
 -287542830,DA_Item_PoweredDescender,Powered Descender,"Reduces fall speed when used in the air, but has a wind-up time before reaching full force. Shuts down once out of power."
 762060615,DA_Item_Recipe_AssaultRifleHeavyRecipe,Bettina Blueprint,
@@ -903,7 +856,6 @@ asset_id,asset_name,display_name_en,description_en
 -882500659,DA_Item_Recipe_WhiteFlagRecipe,White Flag Blueprint,Lets you craft a White Flag
 901535629,DA_Item_Recipe_YellowGlowStickRecipe,Yellow Light Stick Blueprint,Lets you craft a Yellow Light Stick
 -1312166725,DA_Item_RecycleStation_01,Recycle Station,"Breaks things down, allowing you to repurpose the materials to suit your needs."
--1616698820,DA_Item_RemoteTrap_FireworkBox,Fireworks Box,"A remotely triggered arrangement of dazzling fireworks, sure to put on a show."
 1657228973,DA_Item_ResourceGenerator_01,Scrappy,Increases Scrappy's basic haul.
 2041317243,DA_Item_ResourceGenerator_02,Scrappy,Increases Scrappy's basic haul.
 1434069496,DA_Item_ResourceGenerator_03,Scrappy,Increases Scrappy's basic haul.
@@ -911,9 +863,6 @@ asset_id,asset_name,display_name_en,description_en
 1781867314,DA_Item_ResourceGenerator_05,Scrappy,Max Level
 573822120,DA_Item_RoundsExtracted,Rounds Extracted,Number of rounds with a successful extraction
 -1869396984,DA_Item_RoundsPlayed,Rounds Played,Number of rounds played
-2073022999,DA_Item_SMG_01,Bobcat,Has high fire rate but low accuracy.
-235682990,DA_Item_SMG_LowTier_01,Stitcher,"Has a good damage output, but has a low fire-rate for an SMG, and can be hard to control."
-885364202,DA_Item_SMG_Medium_01,Canto,Fully automatic submachine gun with a larger caliber.
 -141877207,DA_Item_Salvage_Accordion_01,Ruined Accordion,Can be recycled into crafting materials.
 246081482,DA_Item_Salvage_AdvancedARCPowercell,Advanced ARC Powercell,Very valuable resource that drops from certain ARC enemies.
 -770265029,DA_Item_Salvage_AdvancedElectricalComponents,Advanced Electrical Components,Used to craft a wide range of items. Can be recycled into crafting materials.
@@ -931,6 +880,7 @@ asset_id,asset_name,display_name_en,description_en
 -844032381,DA_Item_Salvage_BlueGateUtilityKey3,Blue Gate Village Key,Unlocks a door to one of the old Village buildings near the Blue Gate
 -113802073,DA_Item_Salvage_BlueGateUtilityKey4,Blue Gate Cellar Key,Unlocks certain cellar doors near the Blue Gate
 -1084994886,DA_Item_Salvage_BrokenARCMechanism,Damaged ARC Motion Core,Can be recycled into crafting materials.
+-1018214374,DA_Item_Salvage_BronzeStatuette_01,,
 1200348024,DA_Item_Salvage_BuriedCityUtilityKey1,Buried City Hospital Key,Unlocks a door in the Hospital in Buried City
 -1920319269,DA_Item_Salvage_BuriedCityUtilityKey2,Buried City JKV Employee Access Card,Unlocks a door in the J Kozma Ventures company building in Buried City
 -1275287419,DA_Item_Salvage_BuriedCityUtilityKey3,Buried City Town Hall Key,Unlocks the door to the Town Hall in Buried City
@@ -1052,7 +1002,6 @@ asset_id,asset_name,display_name_en,description_en
 -16809548,DA_Item_Salvage_PatrolCarKey,Patrol Car Key,Unlocks the rear door of a patrol car
 -876378926,DA_Item_Salvage_Peppermint_Part,Queen Reactor,Can be recycled into crafting materials.
 989020743,DA_Item_Salvage_PilgrimsPeakSecurityCode,Pilgrim's Peak Security Code,Temporary security code to unlock the main gate.
--600381599,DA_Item_Salvage_PingerPart,Spotter Relay,Can be recycled into crafting materials.
 828947161,DA_Item_Salvage_Plastic,Plastic Parts,Used to craft a wide range of items.
 373384136,DA_Item_Salvage_PlasticTrash,Plastic Trash,Can be recycled into plastic parts.
 424739364,DA_Item_Salvage_PollutedAirFilter,Polluted Air Filter,Can be recycled into crafting materials.
@@ -1118,6 +1067,9 @@ asset_id,asset_name,display_name_en,description_en
 897279399,DA_Item_Salvage_RotaryEncoder,Rotary Encoder,Can be recycled into crafting materials.
 -2048050889,DA_Item_Salvage_Rubber,Rubber Parts,Used to craft a wide range of items.
 -660832239,DA_Item_Salvage_RubberBand_01,Rubber Bands,Can be recycled into crafting materials.
+-1734532604,DA_Item_Salvage_RubberDuck_Winner01,,
+1931019514,DA_Item_Salvage_RubberDuck_Winner02,,
+-979896315,DA_Item_Salvage_RubberDuck_Winner03,,
 423997188,DA_Item_Salvage_RubberPad,Rubber Pad,Can be recycled into rubber parts.
 -486305029,DA_Item_Salvage_RuinedAugment,Ruined Augment,An augment ruined beyond repair.
 -1407135982,DA_Item_Salvage_RunnerPart,Shredder Gyro,Can be recycled into crafting materials.
@@ -1210,16 +1162,10 @@ asset_id,asset_name,display_name_en,description_en
 -799395426,DA_Item_Salvage_WovenCloth,Durable Cloth,Used to craft medical supplies.
 -1074160440,DA_Item_ScatterMissileGrenade,Wolfpack,"A grenade that scatters into multiple homing missiles, each one targeting ARC and dealing explosive damage on impact."
 -1873522360,DA_Item_ShotgunAmmo,Shotgun Ammo,
-556377413,DA_Item_Shotgun_Energy_Adjustable_01,Dolabra,"An experimental weapon that can either fire a wide short range blast, or be focused to fire a tight medium range beam of heat."
--17510831,DA_Item_Shotgun_PumpAction_01,Il Toro,"Has a large bullet spread, sharp falloff, and high damage output."
-970327905,DA_Item_Shotgun_SemiAuto_01,Vulcano,Has good bullet spread but sharp falloff.
 -834400146,DA_Item_Smelter_01,Workbench,
 984123027,DA_Item_SmokeGrenade,Smoke Grenade,"A grenade that creates a lingering smoke cloud on impact, blocking visibility from ARC and other Raiders."
 -1963108876,DA_Item_SnapHook,Snap Hook,A gadget that allows the user to scale structures and cover large distances.
--1967716242,DA_Item_SniperRifle_BoltAction_Medium_01,Osprey,Has reliable damage output and accuracy.
 1958396827,DA_Item_Snowball,Snowball,A compact snowball fashioned out of the most malleable and aerodynamic snow.
-1372066888,DA_Item_Special_BeamRifle_01,Equalizer,A high capacity experimental beam rifle.
-1191072273,DA_Item_Special_Railgun_01,Jupiter,"Fires projectiles at an incredible velocity, capable of damaging multiple targets with one shot."
 -88669682,DA_Item_SprayCan_Fire,Flame Spray,"A classic makeshift weapon, sure to leave scorch marks."
 -853193179,DA_Item_StickyRemoteGrenade,Trigger 'Nade,"A remote-detonated grenade that can stick to surfaces and ARC, dealing explosive damage when triggered."
 -2035840261,DA_Item_StunGrenade,Showstopper,"A grenade that detonates after a delay, stunning enemies within its radius."
@@ -1235,7 +1181,6 @@ asset_id,asset_name,display_name_en,description_en
 537092188,DA_Item_Throwable_TaggingGrenade,Tagging Grenade,"A grenade that detonates after a delay, tagging Raiders and ARC enemies in an area, allowing you to briefly track their location."
 -153748567,DA_Item_Throwable_Trailblazer,Trailblazer,"A grenade that emits a trail of flammable gas along its path, causing an explosive chain reaction when it ignites."
 -1097499674,DA_Item_Throwable_VolcanicRock,Volcanic Rock,Can be thrown.
-409593267,DA_Item_TimedMine_Explosive,Deadline,A mine that deals damage to anything within its radius once the timer runs out.
 1051968888,DA_Item_Unarmed,Unarmed,For when you want to be 'armless!
 291196846,DA_Item_WeaponBench_01,Gunsmith,Add that extra oomph to your weapons by upgrading them here.
 348416871,DA_Item_WeaponBench_02,Gunsmith,Add that extra oomph to your weapons by upgrading them here.
@@ -1249,47 +1194,16 @@ asset_id,asset_name,display_name_en,description_en
 -814658911,DA_Item_WeaponMod_MagazineShotgun_Extended_01,Extended Shotgun Mag I,Slightly extends the ammo capacity of shotguns.
 592639485,DA_Item_WeaponMod_MagazineShotgun_Extended_02,Extended Shotgun Mag II,Moderately extends the ammo capacity of shotguns.
 922097959,DA_Item_WeaponMod_MagazineShotgun_Extended_03,Extended Shotgun Mag III,Significantly extends the ammo capacity of shotguns.
--450689218,DA_Item_WeaponMod_Muzzle_Brake_01,Muzzle Brake I,Slightly reduces both vertical recoil & horizontal recoil.
-1363078343,DA_Item_WeaponMod_Muzzle_Brake_02,Muzzle Brake II,Moderately reduces both vertical recoil & horizontal recoil.
--1113070540,DA_Item_WeaponMod_Muzzle_Brake_03,Muzzle Brake III,Significantly reduces both vertical recoil & horizontal recoil.
--1888542545,DA_Item_WeaponMod_Muzzle_Compensator_01,Compensator I,Slightly reduces per-shot dispersion.
--1072384644,DA_Item_WeaponMod_Muzzle_Compensator_02,Compensator II,Moderately reduces per-shot dispersion.
--518509289,DA_Item_WeaponMod_Muzzle_Compensator_03,Compensator III,Significantly reduces per-shot dispersion.
--977121851,DA_Item_WeaponMod_Muzzle_ExtendedBarrel_01,Extended Barrel I,
--53041115,DA_Item_WeaponMod_Muzzle_ExtendedBarrel_02,Extended Barrel II,
-1407760402,DA_Item_WeaponMod_Muzzle_ExtendedBarrel_03,Extended Barrel III,Moderately increases bullet velocity.
--409081322,DA_Item_WeaponMod_Muzzle_Silencer_01,Silencer I,Slightly reduces the amount of noise produced when firing.
-1921518029,DA_Item_WeaponMod_Muzzle_Silencer_02,Silencer II,Moderately reduces the amount of noise produced when firing.
--621597590,DA_Item_WeaponMod_Muzzle_Silencer_03,Silencer III,Significantly reduces the amount of noise produced when firing.
--1570319542,DA_Item_WeaponMod_ShotgunMuzzle_Choke_01,Shotgun Choke I,Slightly reduces base dispersion.
--1682300422,DA_Item_WeaponMod_ShotgunMuzzle_Choke_02,Shotgun Choke II,Moderately reduces base dispersion.
--1295139142,DA_Item_WeaponMod_ShotgunMuzzle_Choke_03,Shotgun Choke III,Significantly reduces base dispersion.
--319966965,DA_Item_WeaponMod_ShotgunMuzzle_Silencer_01,Silencer I,Moderately reduces the amount of noise produced when firing.
-668021707,DA_Item_WeaponMod_Stock_ActiveStabilizer_01,Kinetic Converter,Moderately increases fire rate.
--2095596285,DA_Item_WeaponMod_Stock_Lightweight_01,Lightweight Stock,Moderately improves ADS & draw speed.
-1682428740,DA_Item_WeaponMod_Stock_Padded_01,Padded Stock,Significantly improves stability.
-775298648,DA_Item_WeaponMod_Stock_Stable_01,Stable Stock I,Slightly improves dispersion & recoil recovery time.
-1287783108,DA_Item_WeaponMod_Stock_Stable_02,Stable Stock II,Moderately improves dispersion & recoil recovery time.
--123856886,DA_Item_WeaponMod_Stock_Stable_03,Stable Stock III,Significantly improves dispersion & recoil recovery time.
--2130292638,DA_Item_WeaponMod_Tech_ProjectileSplitter,Anvil Splitter,Tech mod for the Anvil that replaces its bullets with ones that split into 4 weaker projectiles.
-346923872,DA_Item_WeaponMod_UnderBarrel_AngledGrip_01,Angled Grip I,Slightly reduces horizontal recoil.
--1681246336,DA_Item_WeaponMod_UnderBarrel_AngledGrip_02,Angled Grip II,Moderately reduces horizontal recoil.
--1131982378,DA_Item_WeaponMod_UnderBarrel_AngledGrip_03,Angled Grip III,Significantly reduces horizontal recoil.
-1013182792,DA_Item_WeaponMod_UnderBarrel_HorizontalGrip_01,Horizontal Grip,Moderately reduces both vertical recoil and horizontal recoil.
--1404148784,DA_Item_WeaponMod_UnderBarrel_VerticalGrip_01,Vertical Grip I,Slightly reduces vertical recoil.
--295158634,DA_Item_WeaponMod_UnderBarrel_VerticalGrip_02,Vertical Grip II,Moderately reduces vertical recoil.
--1074924798,DA_Item_WeaponMod_UnderBarrel_VerticalGrip_03,Vertical Grip III,Significantly reduces vertical recoil.
--1708115302,DA_Item_WhiteFlag,White Flag,A deployable white flag.
 1672558715,DA_Item_XP_Points,XP,Experience Points
 793992947,DA_Item_Zipline,Zipline,A deployable zipline that allows you to quickly move between two locations.
 -1973721684,DA_Level_BuriedCity_01_P,,
 -2024805679,DA_Level_MountainCompound,,
 -216020230,DA_Level_OnboardingArray,,
 -73707639,DA_Level_PracticeRangeArray,,
--21263888,DA_Level_RivenTides_01_P,,
 594749606,DA_Level_Spaceport_01_P,,
 1519485851,DA_Level_TheBlueGate_01_P,,
--636184135,DA_Level_TheDam_02_P,,
+-1190681554,DA_MapAreaInfo_CombatValidation,,
+-28450091,DA_MetalDetector_Equipped,Dockmaster's Detector,"These detectors seem to be able to locate foreign objects buried in the sands around Riven Tides, though their exact way of functioning is unknown."
 -1337209565,DA_ModSlot_Firearm_MagazineLight,,Empty slot for a light magazine mod.
 -88515549,DA_ModSlot_Firearm_MagazineMedium,,Empty slot for a medium magazine mod.
 1011082201,DA_ModSlot_Firearm_MagazineShotgun,,Empty slot for a shotgun magazine mod.
@@ -1298,6 +1212,7 @@ asset_id,asset_name,display_name_en,description_en
 1415875854,DA_ModSlot_Firearm_Stock,,Empty slot for a stock mod.
 1228968705,DA_ModSlot_Firearm_Tech_HandCannon,,Empty slot for a tech mod.
 -1923186072,DA_ModSlot_Firearm_UnderBarrel,,Empty slot for an underbarrel mod.
+-400146311,DA_Monolith_Perception,ARC Turbine,
 579331733,DA_OI_BackpackAttachment,Backpack Attachment,
 190228872,DA_OI_BackpackAttachment_Antenna,Antenna,
 237749844,DA_OI_BackpackAttachment_AviatorMask_01_A,AviatorMask,
@@ -1387,6 +1302,7 @@ asset_id,asset_name,display_name_en,description_en
 -1816511586,DA_OI_BackpackCharm_Hatchlingchick,Baby Chick Pendant,
 1350246447,DA_OI_BackpackCharm_HighwayTorch,Road Flare,
 778850628,DA_OI_BackpackCharm_Horse_01,Royal Steed,
+-343262090,DA_OI_BackpackCharm_HotAirBalloon_01_A,Hot Air Balloon,
 -1257736152,DA_OI_BackpackCharm_LanceKeyChain_01_A,,
 -2118959779,DA_OI_BackpackCharm_Lemons_01_A,Lemons,
 1040748031,DA_OI_BackpackCharm_Lizzie_01_A,Lizzy,
@@ -1399,6 +1315,7 @@ asset_id,asset_name,display_name_en,description_en
 -482188352,DA_OI_BackpackCharm_Pager_01_A,Pager,
 1121696354,DA_OI_BackpackCharm_PinkRabbitsFoot,Pink Rabbit's Foot,
 1842264655,DA_OI_BackpackCharm_PocketRadar,Pocket Radar,
+1350601573,DA_OI_BackpackCharm_PolaroidCamera_01_A,Polaroid Camera,
 -1953507044,DA_OI_BackpackCharm_PortableJammer_01_A,Portable Jammer,
 2014334926,DA_OI_BackpackCharm_PressureGauge_01_A,Pressure Gauge,
 -533704534,DA_OI_BackpackCharm_RabbitFoot,Rabbit's Foot,
@@ -1497,9 +1414,7 @@ asset_id,asset_name,display_name_en,description_en
 -2136405593,DA_OI_BackpackContainer_Seasack_Color_Brown,Brown,
 -1928249183,DA_OI_BackpackContainer_Standard,Origin,
 -142101329,DA_OI_BackpackContainer_Standard_Color,Color,
-432345564234343623,DA_OI_BackpackContainer_Standard_Color,Color,
 1911290765,DA_OI_BackpackContainer_Standard_Color_Basic,Basic,
-504403158272274963,DA_OI_BackpackContainer_Standard_Color_Basic,Basic,
 -775997320,DA_OI_BackpackContainer_Survival,Pathfinder,
 -143560104,DA_OI_BackpackContainer_Survival_Color,Color,
 2035667857,DA_OI_BackpackContainer_Survival_Color_GreenRed,Green Red,
@@ -1559,13 +1474,9 @@ asset_id,asset_name,display_name_en,description_en
 -578881641,DA_OI_BackpackFrame_Persistence,,
 -618114534,DA_OI_BackpackFrame_Standard,Default Backpack Frame,
 -1945669753,DA_OI_BackpackFrame_Standard_Color,Color,
-504403158261203377,DA_OI_BackpackFrame_Standard_Color,Color,
 -1259687796,DA_OI_BackpackFrame_Standard_Color_Basic,Basic,
-576460752301926157,DA_OI_BackpackFrame_Standard_Color_Basic,Basic,
 1870991361,DA_OI_BackpackFrame_Standard_Color_Purple,Purple,
-504403158273359213,DA_OI_BackpackFrame_Standard_Color_Purple,Purple,
 -330296643,DA_OI_BackpackFrame_Standard_Color_Yellow,Yellow,
-504403158266895215,DA_OI_BackpackFrame_Standard_Color_Yellow,Yellow,
 -706981308,DA_OI_BattlePass_Default,,
 303537034,DA_OI_BattlePass_Goalie,,
 473944134,DA_OI_BattlePass_Hairstyles,Barber Deck,
@@ -1840,26 +1751,15 @@ asset_id,asset_name,display_name_en,description_en
 1433272974,DA_OI_Hair_ShortWavy_Color_Brown,Brown,
 1832224536,DA_OI_Hair_ShortWavy_Color_Grey,Gray,
 -1141154727,DA_OI_Hair_ShortWavy_Color_Red,Red,
-1119603570,DA_OI_Hair_SideSweptFringe_Color_Black_Persistence,Black,
--863411341,DA_OI_Hair_SideSweptFringe_Color_Brown_Persistence,Brown,
--1765022146,DA_OI_Hair_SideSweptFringe_Color_Persistence,Color,
--1978197553,DA_OI_Hair_SideSweptFringe_Persistence,Side-Swept Fringe,
 17179869184,DA_OI_Outfit,Outfit,
 -2140294840,DA_OI_Outfit_AbandonedAstronaut,Cosmo,
 -545372250,DA_OI_Outfit_AbandonedAstronaut_Color,Color,
-504403158257164761,DA_OI_Outfit_AbandonedAstronaut_Color,Color,
 -1204716205,DA_OI_Outfit_AbandonedAstronaut_Color_Basic,Basic,
-576460752296771014,DA_OI_Outfit_AbandonedAstronaut_Color_Basic,Basic,
 -938767068,DA_OI_Outfit_AbandonedAstronaut_Color_Orange,Orange,
-504403158267530876,DA_OI_Outfit_AbandonedAstronaut_Color_Orange,Orange,
 -98924280,DA_OI_Outfit_AbandonedAstronaut_Color_WhiteCamo,White Camo,
-576460752302273600,DA_OI_Outfit_AbandonedAstronaut_Color_WhiteCamo,White Camo,
 886258006,DA_OI_Outfit_AbandonedAstronaut_Headgear,Headgear,
-432345564232271134,DA_OI_Outfit_AbandonedAstronaut_Headgear,Headgear,
 541839910,DA_OI_Outfit_AbandonedAstronaut_Headgear_Off,Off,
-720575940374393013,DA_OI_Outfit_AbandonedAstronaut_Headgear_Off,Off,
 -1322190868,DA_OI_Outfit_AbandonedAstronaut_Headgear_On,On,
-504403158268387684,DA_OI_Outfit_AbandonedAstronaut_Headgear_On,On,
 -1792956276,DA_OI_Outfit_AbandonedAstronaut_MeshToggle1,MeshToggle1,
 -197401063,DA_OI_Outfit_AbandonedAstronaut_MeshToggle1_Off,Off,
 -436261315,DA_OI_Outfit_AbandonedAstronaut_MeshToggle1_On,On,
@@ -2098,26 +1998,17 @@ asset_id,asset_name,display_name_en,description_en
 -399556275,DA_OI_Outfit_Dashwood_MeshToggle3_On,On,
 -337836035,DA_OI_Outfit_DeepSeaDiver,Leviathan,
 1623721651,DA_OI_Outfit_DeepSeaDiver_Color,Color,
-504403158260176663,DA_OI_Outfit_DeepSeaDiver_Color,Color,
 208928365,DA_OI_Outfit_DeepSeaDiver_Color_Black,Black,
 -487837743,DA_OI_Outfit_DeepSeaDiver_Color_Copper,Copper,
-504403158270405657,DA_OI_Outfit_DeepSeaDiver_Color_Copper,Copper,
 1366294707,DA_OI_Outfit_DeepSeaDiver_Color_EightBall,Eight Ball,
-576460752297600457,DA_OI_Outfit_DeepSeaDiver_Color_EightBall,Eight Ball,
 281137349,DA_OI_Outfit_DeepSeaDiver_Color_Red,Red,
 -1579071568,DA_OI_Outfit_DeepSeaDiver_Color_WhiteBlue,White Blue,
 1667193721,DA_OI_Outfit_DeepSeaDiver_Headgear,Headgear,
-432345564227698435,DA_OI_Outfit_DeepSeaDiver_Headgear,Headgear,
 -117547548,DA_OI_Outfit_DeepSeaDiver_Headgear_Off,Off,
-648518346347166212,DA_OI_Outfit_DeepSeaDiver_Headgear_Off,Off,
 -518699369,DA_OI_Outfit_DeepSeaDiver_Headgear_On,On,
-576460752297844581,DA_OI_Outfit_DeepSeaDiver_Headgear_On,On,
 -1208984728,DA_OI_Outfit_DeepSeaDiver_MeshToggle1,MeshToggle1,
-432345564228362371,DA_OI_Outfit_DeepSeaDiver_MeshToggle1,,
 1611449698,DA_OI_Outfit_DeepSeaDiver_MeshToggle1_Off,Off,
-576460752303172157,DA_OI_Outfit_DeepSeaDiver_MeshToggle1_Off,Off,
 806352405,DA_OI_Outfit_DeepSeaDiver_MeshToggle1_On,On,
-576460752297480955,DA_OI_Outfit_DeepSeaDiver_MeshToggle1_On,On,
 2027565926,DA_OI_Outfit_Drafty,Alpino,
 -83786097,DA_OI_Outfit_Drafty_Color,Color,
 1981374083,DA_OI_Outfit_Drafty_Color_BlueOrange,Blue Orange,
@@ -2425,7 +2316,6 @@ asset_id,asset_name,display_name_en,description_en
 -1198467777,DA_OI_Outfit_GrandRacer_MeshToggle5_On,On,
 -330744802,DA_OI_Outfit_Greenhorn,Patrol,
 948845503,DA_OI_Outfit_Greenhorn_Color,Color,
-498800309,DA_OI_Outfit_Greenhorn_Color_BrownOrange_Persistence,,
 -1864654464,DA_OI_Outfit_Greenhorn_Color_GreenWhite,Green White,
 -566005407,DA_OI_Outfit_Greenhorn_Color_RedWhite,White Red,
 -627403025,DA_OI_Outfit_Greenhorn_Headgear,Headgear,
@@ -2479,29 +2369,17 @@ asset_id,asset_name,display_name_en,description_en
 -1331053827,DA_OI_Outfit_Helix_TechBox_On,On,
 -854400478,DA_OI_Outfit_HiTechHiker,Trailbyte,
 401311301,DA_OI_Outfit_HiTechHiker_Color,Color,
-504403158257942716,DA_OI_Outfit_HiTechHiker_Color,Color,
 -1189523372,DA_OI_Outfit_HiTechHiker_Color_BlueCamo,Blue Camo,
-576460752302501243,DA_OI_Outfit_HiTechHiker_Color_BlueCamo,Blue Camo,
 -1989783211,DA_OI_Outfit_HiTechHiker_Color_Orange,Orange,
-576460752296484156,DA_OI_Outfit_HiTechHiker_Color_Orange,Orange,
 -1358396397,DA_OI_Outfit_HiTechHiker_Color_Teal,Teal,
-504403158267856630,DA_OI_Outfit_HiTechHiker_Color_Teal,Teal,
 357342340,DA_OI_Outfit_HiTechHiker_Color_White,White,
-576460752299997852,DA_OI_Outfit_HiTechHiker_Color_White,White,
 1868941540,DA_OI_Outfit_HiTechHiker_Color_YellowCamo,Yellow Camo,
-504403158269964648,DA_OI_Outfit_HiTechHiker_Color_YellowCamo,Yellow Camo,
 78302893,DA_OI_Outfit_HiTechHiker_Headgear,Headgear,
-432345564229420051,DA_OI_Outfit_HiTechHiker_Headgear,Headgear,
 45021633,DA_OI_Outfit_HiTechHiker_Headgear_Off,Off,
-648518346345236343,DA_OI_Outfit_HiTechHiker_Headgear_Off,Off,
 1613312221,DA_OI_Outfit_HiTechHiker_Headgear_On,On,
-504403158271108371,DA_OI_Outfit_HiTechHiker_Headgear_On,On,
 847316320,DA_OI_Outfit_HiTechHiker_MeshToggle1,MeshToggle1,
-504403158257609918,DA_OI_Outfit_HiTechHiker_MeshToggle1,,
 798463210,DA_OI_Outfit_HiTechHiker_MeshToggle1_Off,Off,
-576460752299673121,DA_OI_Outfit_HiTechHiker_MeshToggle1_Off,Off,
 -545128771,DA_OI_Outfit_HiTechHiker_MeshToggle1_On,On,
-504403158266037368,DA_OI_Outfit_HiTechHiker_MeshToggle1_On,On,
 -693435897,DA_OI_Outfit_HiTechHiker_MeshToggle2,MeshToggle2,
 1745241796,DA_OI_Outfit_HiTechHiker_MeshToggle2_Off,Off,
 529860516,DA_OI_Outfit_HiTechHiker_MeshToggle2_On,On,
@@ -2692,7 +2570,6 @@ asset_id,asset_name,display_name_en,description_en
 -1589207983,DA_OI_Outfit_Lemans_Color_BlackOrange,Orange Black,
 -427771354,DA_OI_Outfit_Lemans_Color_Blue,Blue,
 -928475232,DA_OI_Outfit_Lemans_Color_Red,Red,
-44362839,DA_OI_Outfit_Lemans_Color_WhiteOrange_Persistence,,
 -267050383,DA_OI_Outfit_Lemans_Color_WhiteRed,White Red,
 1374984629,DA_OI_Outfit_Lemans_Color_Yellow,Yellow,
 -1182593423,DA_OI_Outfit_Lemans_Gasmask,Gas Mask,
@@ -3234,11 +3111,8 @@ asset_id,asset_name,display_name_en,description_en
 -1473837114,DA_OI_Outfit_Sport_Color_GreyYellow,Gray Yellow,
 1590674110,DA_OI_Outfit_Sport_Color_RedWhite,White Red,
 865329695,DA_OI_Outfit_Sport_Headgear,Headgear,
-504403158265305862,DA_OI_Outfit_Sport_Headgear,Headgear,
 2094199649,DA_OI_Outfit_Sport_Headgear_Off,Off,
-648518346344837175,DA_OI_Outfit_Sport_Headgear_Off,Off,
 1229320004,DA_OI_Outfit_Sport_Headgear_On,On,
-648518346340513626,DA_OI_Outfit_Sport_Headgear_On,On,
 300375520,DA_OI_Outfit_Sport_MeshToggle1,MeshToggle1,
 1630664789,DA_OI_Outfit_Sport_MeshToggle1_NoTech,No Tech,
 -1605111081,DA_OI_Outfit_Sport_MeshToggle1_Off,Off,
@@ -3360,12 +3234,6 @@ asset_id,asset_name,display_name_en,description_en
 -981596082,DA_OI_Outfit_Vanguard_Sleeves,Sleeves,
 -263921103,DA_OI_Outfit_Vanguard_Sleeves_Off,Off,
 664538203,DA_OI_Outfit_Vanguard_Sleeves_On,On,
--1616395318,DA_OI_Outfit_Vest_Color_Basic_Persistence,Basic,
-2000375541,DA_OI_Outfit_Vest_Color_Persistence,Color,
-1228049683,DA_OI_Outfit_Vest_Headgear_Off_Persistence,Off,
-389903331,DA_OI_Outfit_Vest_Headgear_On_Persistence,On,
--1482166708,DA_OI_Outfit_Vest_Headgear_Persistence,Headgear,
--852007680,DA_OI_Outfit_Vest_Persistence,Vest,
 -1182021240,DA_OI_Outfit_WastelandRebel,Reaver,
 -2107811235,DA_OI_Outfit_WastelandRebel_Color,Color,
 -1516183105,DA_OI_Outfit_WastelandRebel_Color_BlackGreen,Black Green,
@@ -3505,7 +3373,6 @@ asset_id,asset_name,display_name_en,description_en
 31802189,DA_OI_RoosterOutfit_Bomber,Striker,
 -860805204,DA_OI_RoosterOutfit_BoonieHat,Beekeeper's Veil,
 1329588726,DA_OI_RoosterOutfit_Bucket,Bucket,
-2129583258,DA_OI_RoosterOutfit_Cowboy,Cowboy Hat,
 458653832,DA_OI_RoosterOutfit_Diver,Diver Helmet,
 -1273941139,DA_OI_RoosterOutfit_Drafty,Alpino,
 -525903057,DA_OI_RoosterOutfit_Fencer,Fencer Glasses,
@@ -3515,7 +3382,6 @@ asset_id,asset_name,display_name_en,description_en
 481981702,DA_OI_RoosterOutfit_HornetHunter,Hornet Hunter,
 1067564091,DA_OI_RoosterOutfit_JanitorCap,Janitor Cap,
 2106480353,DA_OI_RoosterOutfit_MaskShift,Sheath,
--978004585,DA_OI_RoosterOutfit_None,None,
 1833458640,DA_OI_RoosterOutfit_Nurse,Surgeon Hat,
 601727408,DA_OI_RoosterOutfit_Pilot,Pilot Helmet,
 11848669,DA_OI_RoosterOutfit_Pirate,Pirate Hat,
@@ -3674,6 +3540,12 @@ asset_id,asset_name,display_name_en,description_en
 -1462300809,DA_OI_Workshop_Room_C_01,,
 13529440,DA_OI_Workshop_Room_D_01,,
 -1264657974,DA_OI_Workshop_RootItem,,
+-541195755,DA_PartScavengeSetup_BullCrab,Leaper,
+903845622,DA_PartScavengeSetup_HeavyDrone,Rocketeer,
+664422097,DA_PartScavengeSetup_Hornet,Hornet,
+1786451563,DA_PartScavengeSetup_Snitch,Snitch,
+672378114,DA_PartScavengeSetup_Wasp,Wasp,
+-1166795672,DA_Peppermint_Swipe_Prepare,Queen,
 -1083540236,DA_Persistence_ArmorXP,,
 2009759482,DA_Persistence_BattlepassGridLayout_Layout_1,,
 1256588356,DA_Persistence_BattlepassGridLayout_Layout_5_1VH_1V_3,,
@@ -3708,8 +3580,7 @@ asset_id,asset_name,display_name_en,description_en
 1646223559,DA_Persistence_Clan_Logo_2,,
 86572884,DA_Persistence_Clan_Logo_3,,
 80243895,DA_Persistence_Clan_Logo_4,,
-1895600671,DA_Persistence_Enemy_Kebab_Gatling,,
--1077270808,DA_Persistence_Enemy_Kebab_Missile,,
+1206014721,DA_Persistence_Currency_ResearchPoints,,
 1956168178,DA_Persistence_FirearmXP,,
 -1918890564,DA_Persistence_GenericMedia_ARC_Bombardier_EntryTile,Bombardier,
 517187844,DA_Persistence_GenericMedia_ARC_Bombardier_Landscape,Bombardier,
@@ -3923,17 +3794,11 @@ asset_id,asset_name,display_name_en,description_en
 -455321890,DA_Persistence_GenericMedia_TheRaiders_Landscape,,
 -192736909,DA_Persistence_GenericMedia_TheRaiders_Portrait,,
 1174102475,DA_Persistence_GenericMedia_TheRaiders_Square,,
--348004054,DA_Persistence_ItemSkinSlot_AssaultRifleBullpup01,,
-483596378,DA_Persistence_ItemSkinSlot_AssaultRifleBurst01,,
--1626453129,DA_Persistence_ItemSkinSlot_AssaultRifleLowTier01,,
-928384146,DA_Persistence_ItemSkinSlot_HandCannonSingleAction01,,
--1580377729,DA_Persistence_ItemSkinSlot_ShotgunPumpAction01,,
 799551165,DA_Persistence_Kalika_CharacterXP,,
 -1307209689,DA_Persistence_KineticLeapGadget,Deprecated Data,Deprecated Data
 -702564018,DA_Persistence_Lance_CharacterXP,,
 240513302,DA_Persistence_LauncherXP,,
 -1749999215,DA_Persistence_Level_UnknownDestination,,
-61587001,DA_Persistence_OutpostRoom_Base,,
 1769385159,DA_Persistence_QuestImage_ADeadEnd,,
 1223232097,DA_Persistence_QuestImage_ANewTypeOfPlant,,
 908885498,DA_Persistence_QuestImage_ARisingTide,,
@@ -4171,17 +4036,11 @@ asset_id,asset_name,display_name_en,description_en
 2058677577,DA_Persistence_QuestImage_WithAView,,
 -284454757,DA_Persistence_QuestImage_WorthYourSalt,,
 1492847171,DA_Persistence_QuestImage_Wreckage,,
-85698488,DA_Persistence_Salvage_BrokenTransmitter,,
-264170848,DA_Persistence_Salvage_InactiveTransmitter,,
--1407886517,DA_Persistence_Salvage_Mat_Meercat_Part,,
--506464327,DA_Persistence_Salvage_Trinket_RubberDuck_Dots,,
 1585430599,DA_Persistence_SchematicXP,,
 655004794,DA_Persistence_SessionMod_PowerRechargeRate,,
 2013661866,DA_Persistence_SessionMod_Respawn_Forever,,
 -1564332261,DA_Persistence_SessionMod_Respawn_None,,
 732183126,DA_Persistence_SessionScore,,
--997894289,DA_Persistence_SniperRifle_BoltAction_Bullpup_01,,
--360767846,DA_Persistence_SniperRifle_BoltAction_Bullpup_01_T0,,
 758115684,DA_Persistence_StoreGridLayout_Default,,
 -1957649468,DA_Persistence_StoreGridLayout_Layout1,,
 -797739104,DA_Persistence_StoreGridLayout_Layout2,,
@@ -4212,6 +4071,24 @@ asset_id,asset_name,display_name_en,description_en
 1834958127,DA_Persistence_XP_Teamwork_Revive_OtherPlayer,,
 -85697512,DA_Persistence_XP_Teamwork_Revive_SquadMate,,
 1341503804,DA_Persistence_XP_Teamwork_SquadSavior,,
+1671732587,DA_PingInfo_BarricadeKit,Barricade Kit,A deployable cover that can block incoming damage until it breaks.
+-2085450547,DA_PingInfo_CrashPad,Crash Mat,"A throwable emergency landing device, to soften some heavy landings."
+2028871781,DA_PingInfo_DeployableSoundTrap,Noisemaker,A deployable proximity sensor that sounds an alarm when enemy Raiders are detected.
+-828273506,DA_PingInfo_EmitterTrap_TeslaCoil,Surge Coil,A deployable device that periodically electrifies the area around itself and briefly stuns anything caught within it.
+-643273323,DA_PingInfo_JoltMine,Jolt Mine,A proximity-triggered mine that pops up and stuns anything within its radius.
+1228913912,DA_PingInfo_JumpMine_Explosive,Explosive Mine,"A proximity-triggered mine that pops up and explodes, dealing damage to anything within its radius."
+-100594742,DA_PingInfo_JumpMine_Impulse,Pulse Mine,A proximity-triggered mine that pops up and knocks back anything within its radius.
+458133629,DA_PingInfo_JumpMine_StaminaDoT,Gas Mine,A proximity-triggered mine that pops up and deploys a gas cloud that rapidly drains stamina.
+-1996442482,DA_PingInfo_LaserTrap_DoTGrenade,Blaze Grenade Trap,A laser trip wire that detonates a Blaze Grenade.
+1117674957,DA_PingInfo_LaserTrap_SmokeGrenade,Smoke Grenade Trap,A laser trip wire that detonates a Smoke Grenade.
+-871523219,DA_PingInfo_LaserTrap_StaminaDoT,Gas Grenade Trap,A laser trip wire that detonates a Gas Grenade.
+305351814,DA_PingInfo_LaserTrap_ThrowableDecoy,Lure Grenade Trap,A laser trip wire that detonates a Lure Grenade.
+-600381599,DA_PingInfo_PingerPart,Spotter Relay,Can be recycled into crafting materials.
+1117029558,DA_PingInfo_RemoteFlareTrap,Remote Raider Flare,"A deployable device that, when manually triggered, launches a Raider Distress Flare."
+-1616698820,DA_PingInfo_RemoteTrap_FireworkBox,Fireworks Box,"A remotely triggered arrangement of dazzling fireworks, sure to put on a show."
+409593267,DA_PingInfo_TimedMine_Explosive,Deadline,A mine that deals damage to anything within its radius once the timer runs out.
+-1708115302,DA_PingInfo_WhiteFlag,White Flag,A deployable white flag.
+-1562077677,DA_Pinger_TargetFilter,Spotter,
 -421287873,DA_PurchasableOffer_ARCHunterPack,ARC Hunter Pack,
 418273443,DA_PurchasableOffer_ARCTamerBundle,ARC Tamer Pack,
 -1360638530,DA_PurchasableOffer_AbyssSet,The Abyss Set,
@@ -4222,7 +4099,6 @@ asset_id,asset_name,display_name_en,description_en
 -737264874,DA_PurchasableOffer_BattlePassScoutBackpack,,
 -1611129026,DA_PurchasableOffer_BattlepassHikingGreenBackpack,,
 -711413053,DA_PurchasableOffer_BeachsideSet,The Beachside Set,
-1106811431,DA_PurchasableOffer_Beekeeper,The Beekeeper Set,
 -788591002,DA_PurchasableOffer_BogWalkerSet,The Bog Walker Set,
 -1473447269,DA_PurchasableOffer_BogWalkerSetRebundle,,
 1837756990,DA_PurchasableOffer_BoneSaw_Charm,,
@@ -4284,6 +4160,7 @@ asset_id,asset_name,display_name_en,description_en
 2134184408,DA_PurchasableOffer_Hair_Buzzcut_0,,
 568631394,DA_PurchasableOffer_Hair_CurlyShort_01,Curly Short Haircut,
 -330772531,DA_PurchasableOffer_HardcaseBackpackGreen,,
+-1265643386,DA_PurchasableOffer_HiveKeeperRecolorSet,,
 1416274629,DA_PurchasableOffer_HivekeeperSet,The Hivekeeper Set,
 1843323629,DA_PurchasableOffer_HockeyRaiderTool,,
 1469321052,DA_PurchasableOffer_HornetHunter,Hornet Hunter,
@@ -4360,6 +4237,7 @@ asset_id,asset_name,display_name_en,description_en
 617861629,DA_PurchasableOffer_RiotSet,The Riot Set,
 -633203200,DA_PurchasableOffer_RiotSledgeHammerSet,,
 1919414921,DA_PurchasableOffer_Riposta,The Riposta Set,
+1079659455,DA_PurchasableOffer_RipostaRecolorSet,,
 452968806,DA_PurchasableOffer_RoamerSet,,
 42235700,DA_PurchasableOffer_RockerBundle,,
 386538697,DA_PurchasableOffer_RogueHawkSet,The Rogue Hawk Set,
@@ -4571,6 +4449,12 @@ asset_id,asset_name,display_name_en,description_en
 352204774,DA_Redirector_SniperRifle_BoltAction_Medium_01_T3,Osprey,Has reliable damage output and accuracy.
 -1441495265,DA_Redirector_Special_BeamRifle_01_T0,Equalizer,A high capacity experimental beam rifle.
 -537173438,DA_Redirector_Special_Railgun_01_T0,Jupiter,"Fires projectiles at an incredible velocity, capable of damaging multiple targets with one shot."
+-21263888,DA_RivenTides_EnemyWorldSettings,,
+-504231823,DA_RollBot_Pop_Perception,Pop,
+-1780443771,DA_Rollbot_Boom_Perception,Comet,
+299263764,DA_Rollbot_Flamethrower,Fireball,
+1143392102,DA_Rollbot_Scan,ARC Surveyor,
+2015925366,DA_Runner_GroundPhysicsMovementSettings,Shredder,
 -144893881,DA_SessionMod_BleedOutRate,Faster DBNO Bleed-out,Faster DBNO Bleed-out
 1133767821,DA_SessionMod_BleedOutRate_Less,Slower DBNO Bleed-out,Slower DBNO Bleed-out
 624307541,DA_SessionMod_BleedOutRate_More,Faster DBNO Bleed-out,Faster DBNO Bleed-out
@@ -4654,6 +4538,67 @@ asset_id,asset_name,display_name_en,description_en
 -528666297,DA_SessionMod_XP_Boost040,XP Boost 40%,XP Boost 40%
 619647460,DA_SessionMod_XP_Boost075,XP Boost 75%,XP Boost 75%
 1017388981,DA_SessionMod_XP_Boost100,XP Boost 100%,XP Boost 100%
+-1122989322,DA_Sniper_Utility,Sentinel,
+1225943433,DA_Spearmint_Perception,Matriarch,
 1105015384,DA_SpraytagDefault,,
+-636184135,DA_TheDam_02_MapWidgetMetaData,,
+-352140120,DA_TickDiggingEffect,Tick,
+913532953,DA_TurretEnemyPerception,Turret,
+2129583258,DA_UI_MetaData_RoosterOutfit_Cowboy,Cowboy Hat,
+-978004585,DA_UI_MetaData_RoosterOutfit_None,None,
+-450689218,DA_Visual_WeaponMod_Muzzle_Brake_01,Muzzle Brake I,Slightly reduces both vertical recoil & horizontal recoil.
+1363078343,DA_Visual_WeaponMod_Muzzle_Brake_02,Muzzle Brake II,Moderately reduces both vertical recoil & horizontal recoil.
+-1113070540,DA_Visual_WeaponMod_Muzzle_Brake_03,Muzzle Brake III,Significantly reduces both vertical recoil & horizontal recoil.
+-1888542545,DA_Visual_WeaponMod_Muzzle_Compensator_01,Compensator I,Slightly reduces per-shot dispersion.
+-1072384644,DA_Visual_WeaponMod_Muzzle_Compensator_02,Compensator II,Moderately reduces per-shot dispersion.
+-518509289,DA_Visual_WeaponMod_Muzzle_Compensator_03,Compensator III,Significantly reduces per-shot dispersion.
+-977121851,DA_Visual_WeaponMod_Muzzle_ExtendedBarrel_01,Extended Barrel I,
+-53041115,DA_Visual_WeaponMod_Muzzle_ExtendedBarrel_02,Extended Barrel II,
+1407760402,DA_Visual_WeaponMod_Muzzle_ExtendedBarrel_03,Extended Barrel III,Moderately increases bullet velocity.
+-409081322,DA_Visual_WeaponMod_Muzzle_Silencer_01,Silencer I,Slightly reduces the amount of noise produced when firing.
+1921518029,DA_Visual_WeaponMod_Muzzle_Silencer_02,Silencer II,Moderately reduces the amount of noise produced when firing.
+-621597590,DA_Visual_WeaponMod_Muzzle_Silencer_03,Silencer III,Significantly reduces the amount of noise produced when firing.
+-1570319542,DA_Visual_WeaponMod_ShotgunMuzzle_Choke_01,Shotgun Choke I,Slightly reduces base dispersion.
+-1682300422,DA_Visual_WeaponMod_ShotgunMuzzle_Choke_02,Shotgun Choke II,Moderately reduces base dispersion.
+-1295139142,DA_Visual_WeaponMod_ShotgunMuzzle_Choke_03,Shotgun Choke III,Significantly reduces base dispersion.
+-319966965,DA_Visual_WeaponMod_ShotgunMuzzle_Silencer_01,Silencer I,Moderately reduces the amount of noise produced when firing.
+668021707,DA_Visual_WeaponMod_Stock_ActiveStabilizer_01,Kinetic Converter,Moderately increases fire rate.
+-2095596285,DA_Visual_WeaponMod_Stock_Lightweight_01,Lightweight Stock,Moderately improves ADS & draw speed.
+1682428740,DA_Visual_WeaponMod_Stock_Padded_01,Padded Stock,Significantly improves stability.
+775298648,DA_Visual_WeaponMod_Stock_Stable_01,Stable Stock I,Slightly improves dispersion & recoil recovery time.
+1287783108,DA_Visual_WeaponMod_Stock_Stable_02,Stable Stock II,Moderately improves dispersion & recoil recovery time.
+-123856886,DA_Visual_WeaponMod_Stock_Stable_03,Stable Stock III,Significantly improves dispersion & recoil recovery time.
+-2130292638,DA_Visual_WeaponMod_Tech_ProjectileSplitter,Anvil Splitter,Tech mod for the Anvil that replaces its bullets with ones that split into 4 weaker projectiles.
+346923872,DA_Visual_WeaponMod_UnderBarrel_AngledGrip_01,Angled Grip I,Slightly reduces horizontal recoil.
+-1681246336,DA_Visual_WeaponMod_UnderBarrel_AngledGrip_02,Angled Grip II,Moderately reduces horizontal recoil.
+-1131982378,DA_Visual_WeaponMod_UnderBarrel_AngledGrip_03,Angled Grip III,Significantly reduces horizontal recoil.
+1013182792,DA_Visual_WeaponMod_UnderBarrel_HorizontalGrip_01,Horizontal Grip,Moderately reduces both vertical recoil and horizontal recoil.
+-1404148784,DA_Visual_WeaponMod_UnderBarrel_VerticalGrip_01,Vertical Grip I,Slightly reduces vertical recoil.
+-295158634,DA_Visual_WeaponMod_UnderBarrel_VerticalGrip_02,Vertical Grip II,Moderately reduces vertical recoil.
+-1074924798,DA_Visual_WeaponMod_UnderBarrel_VerticalGrip_03,Vertical Grip III,Significantly reduces vertical recoil.
+2041238290,DA_VitaShot_UseProgress,Vita Shot,A medical item that restores a large amount of health.
+607122405,DA_WeaponVisuals_AssaultRifle_Bullpup_01,Tempest,Has moderate fire rate and accuracy.
+-2005124131,DA_WeaponVisuals_AssaultRifle_Burst_01,Arpeggio,Has decent damage output and accuracy.
+1293279143,DA_WeaponVisuals_AssaultRifle_Heavy_01,Bettina,Has slow fire rate and high damage output.
+1361649590,DA_WeaponVisuals_AssaultRifle_LowTier_01,Rattler,"A cheap offensive option, but has to be reloaded 2 bullets at a time."
+287628378,DA_WeaponVisuals_AssaultRifle_Pneumatic_01,Kettle,"Quick and accurate, but has low bullet velocity and takes a long time to reload."
+-1180768360,DA_WeaponVisuals_BattleRifle_BreachAction_01,Ferro,"Packs a punch, but must be reloaded between every shot."
+582868715,DA_WeaponVisuals_BattleRifle_EnergyBurst_01,Aphelion,Fires high velocity energy rounds.
+1503794034,DA_WeaponVisuals_BattleRifle_LeverAction_01,Renegade,"Lever-action battle rifle with high damage output, accuracy, and headshot damage."
+-1945077813,DA_WeaponVisuals_HandCannon_01,Anvil,"Has high damage output and headshot damage, but slow handling."
+-1448953711,DA_WeaponVisuals_LMG_Medium_01,Torrente,"Has a large ammo capacity, but is only accurate while crouched."
+-1247702575,DA_WeaponVisuals_Launcher_AntiArc_Medium_01_A,Hullcracker,Fires explosive projectiles that only detonate when hitting ARC.
+979354624,DA_WeaponVisuals_Launcher_AntiArc_SingleShot_01_A,Rascal,
+-1369397808,DA_WeaponVisuals_Pistol_01,Burletta,Has decent damage output and accuracy.
+-2011391235,DA_WeaponVisuals_Pistol_HighPower_01,Venator,Fires two shots at a time.
+151930098,DA_WeaponVisuals_Pistol_Silenced_01,Hairpin,"Has a built-in silencer. Great for stealth, but tricky in combat."
+2073022999,DA_WeaponVisuals_SMG_01,Bobcat,Has high fire rate but low accuracy.
+235682990,DA_WeaponVisuals_SMG_LowTier_01,Stitcher,"Has a good damage output, but has a low fire-rate for an SMG, and can be hard to control."
+885364202,DA_WeaponVisuals_SMG_Medium_01,Canto,Fully automatic submachine gun with a larger caliber.
+556377413,DA_WeaponVisuals_Shotgun_Energy_Adjustable_01,Dolabra,"An experimental weapon that can either fire a wide short range blast, or be focused to fire a tight medium range beam of heat."
+-17510831,DA_WeaponVisuals_Shotgun_PumpAction_01,Il Toro,"Has a large bullet spread, sharp falloff, and high damage output."
+970327905,DA_WeaponVisuals_Shotgun_SemiAuto_01,Vulcano,Has good bullet spread but sharp falloff.
+-1967716242,DA_WeaponVisuals_SniperRifle_BoltAction_Medium_01,Osprey,Has reliable damage output and accuracy.
+1372066888,DA_WeaponVisuals_Special_BeamRifle_01,Equalizer,A high capacity experimental beam rifle.
+1191072273,DA_WeaponVisuals_Special_Railgun_01,Jupiter,"Fires projectiles at an incredible velocity, capable of damaging multiple targets with one shot."
 1959680150,UIBattlepassMetaDataItem_0,Back-Alley Market,
--1190681554,UIMapAreaInfoMetaDataItem_0,,

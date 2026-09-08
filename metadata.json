@@ -1,12 +1,12 @@
 {
-  "steamBuildId": "24710327",
-  "steamBuildUpdatedAtUtc": "2026-08-18T08:59:32Z",
+  "steamBuildId": "25163933",
+  "steamBuildUpdatedAtUtc": "2026-09-08T08:59:53Z",
   "depots": [
     {
       "depotId": "1808501",
-      "manifestId": "646418137101706242"
+      "manifestId": "4625131891870974441"
     }
   ],
-  "tag": "arc-24710327-exfil-v0.13.4",
-  "publishedAtUtc": "2026-08-18T09:15:37Z"
+  "tag": "arc-25163933-exfil-v0.13.4",
+  "publishedAtUtc": "2026-09-08T09:21:43Z"
 }
