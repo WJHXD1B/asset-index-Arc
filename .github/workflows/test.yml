@@ -1,0 +1,42 @@
+name: Test extractor
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-extractor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CUE4PARSE_SKIP_NATIVE: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.302
+      - name: Test runner disk preparation
+        run: bash tests/ci/test-prepare-runner-disk.sh
+      - name: Test preview Steam session offline
+        run: python3 tests/ci/test-extract-preview.py
+      - name: Test update scheduling offline
+        run: python3 tests/ci/test-update.py
+      - name: Test source release policy offline
+        run: python3 tests/ci/test-release.py
+      - name: Build Steam authentication helper
+        run: dotnet build src/SteamAuthToken/SteamAuthToken.csproj -c Release --nologo
+      - name: Run offline tests
+        run: dotnet test tests/AssetIndex.Tests/AssetIndex.Tests.csproj -c Release --nologo
+      - name: Test snapshot publisher offline
+        run: dotnet test tests/PublishSnapshot.Tests/PublishSnapshot.Tests.csproj -c Release --nologo

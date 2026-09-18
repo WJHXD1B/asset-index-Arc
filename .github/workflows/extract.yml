@@ -1,0 +1,206 @@
+name: Update asset snapshot
+
+on:
+  schedule:
+    - cron: '2-59/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Extract even when the current Steam release is already published.
+        type: boolean
+        default: false
+      publish:
+        description: Publish the validated snapshot; otherwise export only.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-asset-snapshot
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: ${{ github.repository == 'raidertool/asset-index' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      needed: ${{ steps.plan.outputs.needed }}
+      manifest_id: ${{ steps.plan.outputs.manifest_id }}
+      extractor_commit: ${{ steps.plan.outputs.extractor_commit }}
+      expected_metadata_blob: ${{ steps.plan.outputs.expected_metadata_blob }}
+    steps:
+      - name: Check out update planner only
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /scripts/automation/
+      - name: Check public version and retry state
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force }}
+          UPDATES_ENABLED: ${{ vars.ASSET_UPDATES_ENABLED }}
+        run: python3 scripts/automation/update.py plan
+
+  extract:
+    name: Extract validated snapshot
+    needs: plan
+    if: ${{ needs.plan.outputs.needed == 'true' }}
+    # Configure this environment to allow only main before adding Steam secrets.
+    environment: steam-extraction
+    runs-on: ubuntu-latest
+    timeout-minutes: 205
+    outputs:
+      export_sha256: ${{ steps.export.outputs.export_sha256 }}
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+    env:
+      CUE4PARSE_SKIP_NATIVE: 'true'
+      MANIFEST_ID: ${{ needs.plan.outputs.manifest_id }}
+      EXTRACTOR_COMMIT: ${{ needs.plan.outputs.extractor_commit }}
+    steps:
+      - name: Check out released source
+        timeout-minutes: 5
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.plan.outputs.extractor_commit }}
+          persist-credentials: false
+          submodules: recursive
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /src/
+            /vendor/
+            /mappings/
+            /scripts/
+            /*.json
+            /*.props
+            /*.targets
+            /NuGet.config
+            /.gitmodules
+            !/metadata.json
+            !/coverage.json
+            !/assets.json
+            !/resources.json
+            !/schema.json
+      - name: Set up .NET
+        timeout-minutes: 5
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: 10.0.302
+      - name: Build released tools
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          dotnet build src/SteamAuthToken/SteamAuthToken.csproj -c Release --nologo
+          dotnet build src/AssetIndex/AssetIndex.csproj -c Release --nologo
+          dotnet build src/PublishSnapshot/PublishSnapshot.csproj -c Release --nologo
+      - name: Prepare extraction disk and FUSE
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          bash scripts/ci/prepare-runner-disk.sh
+          sudo apt-get update
+          sudo apt-get install -y fuse3 libfuse2
+          if [[ ! -c /dev/fuse ]]; then sudo modprobe fuse; fi
+          test -c /dev/fuse
+      - name: Install verified SteamDepotFS
+        timeout-minutes: 5
+        run: python3 scripts/steam/install.py "$RUNNER_TEMP/steam-depotfs"
+      - name: Extract selected Steam release
+        timeout-minutes: 140
+        env:
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+          STEAM_DEPOTFS: ${{ runner.temp }}/steam-depotfs/SteamDepotFs
+        run: bash scripts/steam/extract.sh
+      - name: Validate and export public files
+        id: export
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          if ! dotnet src/PublishSnapshot/bin/Release/net10.0/PublishSnapshot.dll --export \
+            "$RUNNER_TEMP/asset-index-preview" "$RUNNER_TEMP/asset-index-public" \
+            "$EXTRACTOR_COMMIT" "$MANIFEST_ID" > "$RUNNER_TEMP/export.log" 2>&1; then
+            echo "Snapshot validation failed; no artifact or data was published." >&2
+            exit 1
+          fi
+          digest="$(dotnet src/PublishSnapshot/bin/Release/net10.0/PublishSnapshot.dll \
+            --export-digest "$RUNNER_TEMP/asset-index-public")"
+          [[ "$digest" =~ ^[0-9a-f]{64}$ ]]
+          echo "export_sha256=$digest" >> "$GITHUB_OUTPUT"
+      - name: Transfer approved public files
+        id: upload
+        timeout-minutes: 5
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: asset-snapshot-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/asset-index-public/
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
+
+  publish:
+    name: Publish validated snapshot
+    needs: [plan, extract]
+    if: ${{ (github.event_name == 'schedule' && vars.ASSET_UPDATES_ENABLED == 'true') || inputs.publish }}
+    environment: asset-publication
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      CUE4PARSE_SKIP_NATIVE: 'true'
+      EXTRACTOR_COMMIT: ${{ needs.plan.outputs.extractor_commit }}
+      MANIFEST_ID: ${{ needs.plan.outputs.manifest_id }}
+      EXPORT_SHA256: ${{ needs.extract.outputs.export_sha256 }}
+      EXPECTED_METADATA_BLOB: ${{ needs.plan.outputs.expected_metadata_blob }}
+    steps:
+      - name: Check out released publisher
+        timeout-minutes: 5
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.plan.outputs.extractor_commit }}
+          persist-credentials: false
+          submodules: recursive
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /src/
+            /vendor/
+            /mappings/
+            /scripts/automation/
+            /global.json
+            /Directory.*
+            /NuGet.config
+            /.gitmodules
+      - name: Set up .NET
+        timeout-minutes: 5
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: 10.0.302
+      - name: Build released publisher
+        timeout-minutes: 15
+        run: dotnet build src/PublishSnapshot/PublishSnapshot.csproj -c Release --nologo
+      - name: Download this run's public export
+        timeout-minutes: 5
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          artifact-ids: ${{ needs.extract.outputs.artifact_id }}
+          path: ${{ runner.temp }}/asset-index-public
+          merge-multiple: true
+      - name: Recheck publication state and publish atomically
+        timeout-minutes: 10
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 scripts/automation/update.py current
+          gh auth setup-git --hostname github.com
+          dotnet src/PublishSnapshot/bin/Release/net10.0/PublishSnapshot.dll --publish-export \
+            "$RUNNER_TEMP/asset-index-public" https://github.com/raidertool/asset-index.git \
+            "$EXTRACTOR_COMMIT" "$MANIFEST_ID" "$EXPORT_SHA256" "$EXPECTED_METADATA_BLOB"

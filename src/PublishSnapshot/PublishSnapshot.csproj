@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../vendor/CUE4Parse/CUE4Parse/CUE4Parse.csproj" />
+    <None Include="../../mappings/ArcRaiders.usmap" Link="mappings/ArcRaiders.usmap" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../AssetIndex/CatalogRecords.cs" Link="CatalogRecords.cs" />
+    <Compile Include="../AssetIndex/CatalogCsv.cs" Link="CatalogCsv.cs" />
+    <Compile Include="../AssetIndex/ResourceFiles.cs" Link="ResourceFiles.cs" />
+    <Compile Include="../AssetIndex/GameplayTagQueryPolicy.cs" Link="GameplayTagQueryPolicy.cs" />
+    <Compile Include="../AssetIndex/ImageFields.cs" Link="ImageFields.cs" />
+    <Compile Include="../AssetIndex/InventoryRootPolicy.cs" Link="InventoryRootPolicy.cs" />
+    <Compile Include="../AssetIndex/TextRolePolicy.cs" Link="TextRolePolicy.cs" />
+    <Compile Include="../AssetIndex/ReferencePolicy.cs" Link="ReferencePolicy.cs" />
+    <Compile Include="../AssetIndex/PackageIndexRecords.cs" Link="PackageIndexRecords.cs" />
+    <Compile Include="../AssetIndex/ClassScope.cs" Link="ClassScope.cs" />
+    <PackageReference Include="SkiaSharp" Version="2.88.9" />
+    <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.4" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.9" />
+    <InternalsVisibleTo Include="PublishSnapshot.Tests" />
+  </ItemGroup>
+</Project>

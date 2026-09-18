@@ -1,0 +1,392 @@
+using AssetIndex.Discovery;
+using System.Diagnostics;
+using CUE4Parse.FileProvider.Objects;
+using CUE4Parse.UE4.Assets;
+using CUE4Parse.UE4.Assets.Exports;
+using CUE4Parse.UE4.Assets.Exports.Texture;
+using CUE4Parse.UE4.Objects.UObject;
+
+namespace AssetIndex;
+
+internal sealed record PackageRead(string Path, string? Name, string Reason, string Status, int Exports,
+    IReadOnlyList<int> Selected, IReadOnlyList<int> Decoded);
+internal sealed record DiscoveryResult(IReadOnlyList<CatalogAsset> Assets, IReadOnlyList<ObjectReference> Objects,
+    IReadOnlyList<RegisteredObject> Registry, IReadOnlyList<PackageFile> Files, IReadOnlyList<PackageRead> Packages,
+    IReadOnlyList<ExtractionIssue> Issues, IReadOnlyList<ObjectLocation> UiTextures)
+{
+    public int RegisteredAssets => Registry.Count;
+    public int Candidates => Packages.Count;
+    public int Loaded => Packages.Count(package => package.Status == "succeeded");
+    public int UnmappedNonCatalogExports { get; init; }
+    public IReadOnlyList<ExtractionIssue> Notices { get; init; } = [];
+    public int UnavailableSoftReferences { get; init; }
+    public int UnavailableHardReferences { get; init; }
+}
+
+internal static class AssetDiscovery
+{
+    public static DiscoveryResult Read(PackageProvider provider, Action<ObjectEvidence> writeEvidence, Action<ExportHeader> writeHeader,
+        Action<IReadOnlyList<RegisteredObject>, IReadOnlyList<PackageFile>> writeInventory, ExtractionProgress progress) =>
+        new ObjectCrawler(provider, writeEvidence, writeHeader, progress).Read(writeInventory);
+
+    internal static string DescribeError(Exception error)
+    {
+        var cause = error.GetBaseException().Message;
+        return cause == error.Message ? error.Message : $"{error.Message} Cause: {cause}";
+    }
+}
+
+internal sealed class ObjectCrawler(PackageProvider provider, Action<ObjectEvidence> writeEvidence, Action<ExportHeader> writeHeader,
+    ExtractionProgress? progress = null)
+{
+    private readonly CUE4Parse.MappingsProvider.TypeMappings mappings = provider.MappingsForGame
+        ?? throw new InvalidDataException("Asset discovery requires type mappings.");
+    private readonly List<ExtractionIssue> issues = [];
+    private readonly List<ExtractionIssue> notices = [];
+    private int unavailableSoftReferences;
+    private int unavailableHardReferences;
+    private readonly DiagnosticSamples diagnostics = new(Console.Error);
+    private readonly Queue<PackageWork> pendingPackages = new();
+    private readonly Queue<(PackageWork Package, ExportHeader Header)> pendingExports = new();
+    private readonly Dictionary<string, PackageWork> packages = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, PackageWork> packageNames = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, (ObjectReference Source, string Origin)> objects = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, ObjectLocation> uiTextures = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ReferenceClosure references = new();
+    private readonly Dictionary<string, ExportHeader> headers = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> headerOnly = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ClassScope classScope = new(provider.MappingsForGame
+        ?? throw new InvalidDataException("Asset discovery requires type mappings."), provider.MappingSha256);
+    private Dictionary<string, RegisteredObject[]> registeredPackages = new(StringComparer.OrdinalIgnoreCase);
+    private int inspected;
+    private int decoded;
+
+    public DiscoveryResult Read(Action<IReadOnlyList<RegisteredObject>, IReadOnlyList<PackageFile>> writeInventory)
+    {
+        progress?.Set("read-registry");
+        var registry = Registry.Read(provider, issues);
+        return Read(registry, writeInventory);
+    }
+
+    internal DiscoveryResult Read(IReadOnlyList<RegisteredObject> registry,
+        Action<IReadOnlyList<RegisteredObject>, IReadOnlyList<PackageFile>> writeInventory)
+    {
+        progress?.Set("inventory");
+        var files = PackageInventory.Read(provider, registry, issues);
+        Console.Error.WriteLine($"Inventoried {files.Count:N0} effective packages; {files.Sum(file => provider[file.Path].Size):N0} package bytes before decoding.");
+        progress?.Set("write-inventory");
+        writeInventory(registry, files);
+        progress?.Set("select-packages");
+        registeredPackages = registry.GroupBy(asset => GameFiles.ResolvePackagePath(provider, asset.Package), StringComparer.OrdinalIgnoreCase).ToDictionary(group => group.Key,
+            group => group.ToArray(), StringComparer.OrdinalIgnoreCase);
+        var uiPaths = registry.Where(Registry.IsUiTexture).Select(entry => entry.Path).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var catalog = new CatalogCollector(mappings, provider.Locate, issues);
+        foreach (var asset in registry)
+            if (Registry.SelectClass(mappings, asset.Class) || Registry.IsUiTexture(asset))
+                RequestPackage(asset.Package, Registry.IsUiTexture(asset) ? "ui-texture" : "definition");
+        foreach (var file in files)
+            RequestPackage(file.Path, file.RegistryPackages.Count == 0 ? "unindexed" : "inventory");
+        OrderPackageReads();
+
+        while (pendingPackages.Count > 0 || pendingExports.Count > 0)
+        {
+            if (pendingPackages.TryDequeue(out var package))
+            {
+                Inspect(package);
+                if (++inspected % 250 == 0) ReportProgress(package.Path);
+                continue;
+            }
+            var (owner, header) = pendingExports.Dequeue();
+            ReadExport(owner, header, catalog, uiPaths);
+            if (++decoded % 250 == 0) ReportProgress(owner.Path);
+        }
+        progress?.Set("reference-closure");
+        foreach (var issue in references.Check(objects.Keys, headerOnly)) AddIssue(issue, "reference:missing-target");
+        progress?.Set("catalog");
+        var allObjects = objects.OrderBy(pair => pair.Key, StringComparer.Ordinal).Select(pair => pair.Value.Source).ToArray();
+        var reads = packages.Values.OrderBy(package => package.Path, StringComparer.Ordinal).Select(package => package.Report()).ToArray();
+        return new(catalog.Complete(), allObjects, registry, files, reads, issues,
+            uiTextures.Values.OrderBy(location => location.Path, StringComparer.Ordinal).ToArray())
+        {
+            Notices = notices,
+            UnavailableSoftReferences = unavailableSoftReferences,
+            UnavailableHardReferences = unavailableHardReferences,
+            UnmappedNonCatalogExports = headerOnly.Count
+        };
+    }
+
+    private PackageWork RequestPackage(string path, string reason)
+    {
+        var physical = GameFiles.ResolvePackagePath(provider, path);
+        if (packages.TryGetValue(physical, out var existing)) return existing;
+        provider.TryGetGameFile(physical, out var file);
+        var package = new PackageWork(physical, reason, file);
+        packages.Add(physical, package);
+        pendingPackages.Enqueue(package);
+        return package;
+    }
+
+    private void OrderPackageReads()
+    {
+        var ordered = pendingPackages.Select(work => (Work: work, Position: PackageReadOrder.Position(work.File)))
+            .OrderBy(item => item.Position is null ? 0 : 1)
+            .ThenBy(item => item.Position?.Container, StringComparer.Ordinal)
+            .ThenBy(item => item.Position?.Partition)
+            .ThenBy(item => item.Position?.Offset)
+            .ThenBy(item => item.Position?.LogicalOffset)
+            .ThenBy(item => item.Work.Path, StringComparer.Ordinal)
+            .Select(item => item.Work).ToArray();
+        pendingPackages.Clear();
+        foreach (var work in ordered) pendingPackages.Enqueue(work);
+    }
+
+    private void Inspect(PackageWork work)
+    {
+        progress?.Set("load-package", work.Path);
+        try
+        {
+            var package = LoadPackage(work);
+            work.Name = package.Name;
+            progress?.Set("read-export-headers", work.Path);
+            work.Headers = ExportInventory.Read(package, work.Path, mappings);
+            if (work.Headers.Count != package.ExportMapLength || work.Headers.Count != package.ExportsLazy.Length)
+                throw new InvalidDataException("Export header and lazy body counts disagree.");
+        }
+        catch (Exception error)
+        {
+            work.Failure = AssetDiscovery.DescribeError(error);
+            AddIssue(new("package", work.Path, work.Failure), "package:" + error.GetBaseException().GetType().Name);
+            return;
+        }
+
+        progress?.Set("write-export-headers", work.Path);
+        foreach (var header in work.Headers)
+        {
+            writeHeader(header);
+            if (header.Path is { } path && !headers.TryAdd(path, header))
+                PackageIssue(work, "metadata", path, "Duplicate export path across inspected packages.");
+        }
+        if (!packageNames.TryAdd(work.Name!, work))
+        {
+            var first = packageNames[work.Name!];
+            first.Issues++;
+            PackageIssue(work, "metadata", work.Path, $"Duplicate logical package name {work.Name}; also supplied by {first.Path}.");
+        }
+        foreach (var header in work.Headers)
+        {
+            if (Registry.SelectClass(header)) Select(work, header);
+        }
+        foreach (var entry in registeredPackages.GetValueOrDefault(work.Path, []))
+            if (Registry.SelectClass(mappings, entry.Class) || Registry.IsUiTexture(entry)) SelectRegistered(work, entry);
+        foreach (var (target, source) in work.Targets) SelectTarget(work, target, source);
+    }
+
+    private void Select(PackageWork package, ExportHeader header)
+    {
+        if (package.Selected.Add(header.Index)) pendingExports.Enqueue((package, header));
+    }
+
+    private void SelectTarget(PackageWork work, string target, string source)
+    {
+        var matches = work.Headers!.Where(header => string.Equals(header.Path, target, StringComparison.OrdinalIgnoreCase)).ToArray();
+        if (matches.Length != 1)
+        {
+            PackageIssue(work, "reference", source, $"Expected one export header for {target}; found {matches.Length}.");
+            return;
+        }
+        var header = matches[0];
+        if (CanOmitBody(header))
+        {
+            references.Inventory(target);
+            return;
+        }
+        if (references.NeedsBody(target) || Registry.FollowClass(header)) Select(work, header);
+        else references.Inventory(target);
+    }
+
+    private void SelectRegistered(PackageWork work, RegisteredObject entry)
+    {
+        var matches = work.Headers!.Where(header => string.Equals(header.Path, entry.Path, StringComparison.OrdinalIgnoreCase)).ToArray();
+        if (matches.Length == 0 && entry.Tags.TryGetValue("GeneratedClass", out var generated))
+        {
+            var quote = generated.IndexOf('\'');
+            var path = quote < 0 ? generated : generated.EndsWith('\'') ? generated[(quote + 1)..^1] : "";
+            var declaredClass = quote < 0 ? null : generated[..quote];
+            matches = work.Headers!.Where(header => string.Equals(header.Path, path, StringComparison.OrdinalIgnoreCase) &&
+                header.Ancestry.Contains("BlueprintGeneratedClass", StringComparer.OrdinalIgnoreCase) &&
+                (declaredClass is null || string.Equals(header.Class, declaredClass, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(header.ClassPath, declaredClass, StringComparison.OrdinalIgnoreCase))).ToArray();
+        }
+        if (matches.Length != 1)
+        {
+            PackageIssue(work, "registry", entry.Path, "Selected registry object has no unique export or explicit GeneratedClass correspondence.");
+            return;
+        }
+        Select(work, matches[0]);
+    }
+
+    private IPackage LoadPackage(PackageWork work) =>
+        work.File is null ? provider.LoadPackage(work.Path) : provider.LoadPackage(work.File);
+
+    private void ReadExport(PackageWork work, ExportHeader header, CatalogCollector catalog, IReadOnlySet<string> uiPaths)
+    {
+        var origin = $"{work.Path}#export/{header.Index}";
+        if (CanOmitBody(header) && !uiPaths.Contains(header.Path!))
+        {
+            work.Selected.Remove(header.Index);
+            references.Inventory(header.Path!);
+            if (headerOnly.Add(header.Path!))
+                notices.Add(new("schema", header.Path!, "Field layout is unavailable; verified class family is outside catalog selection. Header retained."));
+            return;
+        }
+        if (header.Error is not null) PackageIssue(work, "metadata", origin, header.Error);
+        progress?.Set("decode-export", work.Path, header.Index);
+        UObject source;
+        try
+        {
+            var package = LoadPackage(work);
+            if (package.Name != work.Name || package.ExportMapLength != work.Headers!.Count)
+                throw new InvalidDataException("Reloaded package metadata differs from its inspected headers.");
+            source = package.ExportsLazy[header.Index].Value;
+        }
+        catch (Exception error)
+        {
+            PackageIssue(work, "decode", origin, AssetDiscovery.DescribeError(error));
+            return;
+        }
+        progress?.Set("read-evidence", work.Path, header.Index);
+        var evidence = EvidenceReader.Read(source);
+        CheckHeader(work, header, evidence, source is UStruct, origin);
+        ReadEvidence(evidence, work, header.Index);
+        work.Decoded.Add(header.Index);
+        if (evidence.Path.Length == 0) return;
+        if (!objects.TryAdd(evidence.Path, (new(source.Name, source.ExportType, evidence.Path), origin)))
+        {
+            PackageIssue(work, "decode", origin,
+                $"Duplicate object path {evidence.Path}; first decoded at {objects[evidence.Path].Origin}; repeated at {origin}.");
+            return;
+        }
+        progress?.Set("capture-catalog", work.Path, header.Index);
+        catalog.Observe(source);
+        if (source is not UTexture2D || !uiPaths.Contains(evidence.Path)) return;
+        try { uiTextures.Add(evidence.Path, provider.Locate(source)); }
+        catch (Exception error) { PackageIssue(work, "image", evidence.Path, AssetDiscovery.DescribeError(error)); }
+    }
+
+    private void CheckHeader(PackageWork work, ExportHeader header, ObjectEvidence evidence, bool declaration, string origin)
+    {
+        if (!string.Equals(header.Path, evidence.Path, StringComparison.OrdinalIgnoreCase) ||
+            !string.Equals(header.Class, evidence.Class, StringComparison.OrdinalIgnoreCase))
+            PackageIssue(work, "metadata", origin, $"Decoded object {evidence.Class} {evidence.Path} disagrees with its export header {header.Class} {header.Path}.");
+        var classPath = evidence.References.FirstOrDefault(edge => edge.Pointer == "/Class")?.TargetPath;
+        if (!string.Equals(header.ClassPath, classPath, StringComparison.OrdinalIgnoreCase))
+            PackageIssue(work, "metadata", origin, "Decoded qualified class differs from its export header.");
+        if (declaration && !string.Equals(header.SuperPath,
+            evidence.References.FirstOrDefault(edge => edge.Pointer == "/Native/SuperStruct")?.TargetPath, StringComparison.OrdinalIgnoreCase))
+            PackageIssue(work, "metadata", origin, "Decoded superclass differs from its export header.");
+    }
+
+    private bool CanOmitBody(ExportHeader header) => !header.AncestryComplete && header.Error is not null &&
+        header.Path is not null && header.ClassPath is not null && classScope.CanOmitBody(header.ClassPath, path =>
+            headers.TryGetValue(path, out var declaration) && declaration.ClassPath is { } meta
+                ? new(meta, declaration.SuperPath, declaration.AncestryComplete && declaration.Error is null) : null);
+
+    private void ReadEvidence(ObjectEvidence evidence, PackageWork owner, int exportIndex)
+    {
+        evidence = ClassifyUnavailable(evidence, owner, exportIndex);
+        progress?.Set("write-evidence", owner.Path, exportIndex);
+        writeEvidence(evidence);
+        progress?.Set("follow-references", owner.Path, exportIndex);
+        foreach (var issue in evidence.Issues)
+            PackageIssue(owner, "evidence", evidence.Path + issue.Pointer, issue.Message);
+        foreach (var reference in evidence.References)
+        {
+            if (reference.Unavailable is not null && IsNoncritical(evidence, reference, owner, exportIndex))
+            {
+                if (reference.Kind == "soft") unavailableSoftReferences++;
+                else unavailableHardReferences++;
+                continue;
+            }
+            if (reference.Error is not null)
+                PackageIssue(owner, "reference", evidence.Path + reference.Pointer, reference.Error);
+            if (reference.IsNull || reference.TargetPath is not { } target || target.StartsWith("/Script/", StringComparison.OrdinalIgnoreCase)) continue;
+            var packagePath = target.Split('.', 2)[0];
+            if (!packagePath.StartsWith('/')) continue;
+            var work = RequestPackage(packagePath, "reference");
+            if (!target.Contains('.')) continue; // Package-only outer links have no export body to select.
+            var source = evidence.Path + reference.Pointer;
+            var changed = references.Require(source, target, reference.Role is "class-default" or "template");
+            work.Targets.TryAdd(target, source);
+            if (changed && work.Headers is not null && work.Failure is null) SelectTarget(work, target, source);
+        }
+    }
+
+    private ObjectEvidence ClassifyUnavailable(ObjectEvidence evidence, PackageWork owner, int exportIndex)
+    {
+        return evidence with
+        {
+            References = evidence.References.Select(reference =>
+        {
+            if (reference.Kind != "soft" || reference.IsNull || reference.Error is not null || reference.TargetPath is not { } target ||
+                provider.InputIndex.MissingSoft(target) is not { } missing ||
+                !IsNoncritical(evidence, reference, owner, exportIndex)) return reference;
+            return reference with { Unavailable = missing };
+        }).ToArray()
+        };
+    }
+
+    private bool IsNoncritical(ObjectEvidence evidence, ReferenceEvidence reference, PackageWork owner, int exportIndex)
+    {
+        if (reference.Role != "property" || evidence.Issues.Count != 0 || ReferencePolicy.RootPointer(reference.Pointer) is not { } root)
+            return false;
+        var field = evidence.Properties.SingleOrDefault(property => property.Pointer == root);
+        if (field is null || ReferencePolicy.ProtectedFields.Contains(field.Name)) return false;
+        try
+        {
+            var source = LoadPackage(owner).ExportsLazy[exportIndex].Value;
+            var schema = ClassSchema.Read(source, mappings);
+            return schema.Error is null && ReferencePolicy.AllowsUnavailable(schema.NativeAncestry, field.Name) &&
+                schema.HasProperty(field.Name, field.Type);
+        }
+        catch (Exception) { return false; } // Failure is retained by normal strict reference handling.
+    }
+
+    private void PackageIssue(PackageWork package, string stage, string path, string message)
+    {
+        package.Issues++;
+        AddIssue(new(stage, path, message), stage + ":" + message);
+    }
+
+    private void ReportProgress(string path)
+    {
+        using var process = Process.GetCurrentProcess();
+        var storage = $"package bytes {provider.CachedPackageBytes / (1024 * 1024):N0} MiB cached, {provider.SpooledPackageBytes / (1024 * 1024):N0} MiB spooled; ";
+        Console.Error.WriteLine($"Inspected {inspected:N0} packages; {pendingPackages.Count:N0} packages and {pendingExports.Count:N0} exports pending; " +
+            $"{objects.Count:N0} objects, {issues.Count:N0} issues; memory {process.WorkingSet64 / (1024 * 1024):N0} MiB resident, " +
+            $"{GC.GetTotalMemory(false) / (1024 * 1024):N0} MiB managed; {storage}last {path}.");
+    }
+
+    private void AddIssue(ExtractionIssue issue, string category)
+    {
+        issues.Add(issue);
+        diagnostics.Write(issue, category);
+    }
+
+    private sealed class PackageWork(string path, string reason, GameFile? file)
+    {
+        public string Path { get; } = path;
+        public string Reason { get; } = reason;
+        public GameFile? File { get; } = file;
+        public string? Name { get; set; }
+        public IReadOnlyList<ExportHeader>? Headers { get; set; }
+        public string? Failure { get; set; }
+        public int Issues { get; set; }
+        public HashSet<int> Selected { get; } = [];
+        public HashSet<int> Decoded { get; } = [];
+        public Dictionary<string, string> Targets { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public PackageRead Report() => new(Path, Name, Reason,
+            Failure is not null ? "failed" : Issues > 0 || Selected.Count != Decoded.Count ? "incomplete" : "succeeded",
+            Headers?.Count ?? 0, Selected.Order().ToArray(), Decoded.Order().ToArray());
+    }
+}

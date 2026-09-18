@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" PrivateAssets="all" />
+    <ProjectReference Include="../../src/AssetIndex/AssetIndex.csproj" />
+    <Using Include="Xunit" />
+    <None Update="Fixtures/extractor-icon.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../vendor/CUE4Parse/CUE4Parse.Tests/Fixtures/UE5_8/IoStore/Tagged/Zlib/CUE4ParseFixtures-Minimal-Zlib-Windows.*"
+          Link="Fixtures/IoStore/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
