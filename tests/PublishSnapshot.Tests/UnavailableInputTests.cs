@@ -38,6 +38,7 @@ public sealed partial class PublisherTests
     [InlineData("DefaultContainer")]
     [InlineData("AllowedContainersQuery")]
     [InlineData("AugmentSlot")]
+    [InlineData("ItemCategory")]
     public void ProtectedFieldsCannotUseUnavailableExceptions(string field)
     {
         AddUnavailableFixture(false);

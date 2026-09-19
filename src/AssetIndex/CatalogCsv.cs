@@ -71,6 +71,10 @@ internal static class CatalogCsv
 
     private static string SelectImage(AssetRecord asset, string[] fields, bool wide)
     {
+        var items = asset.Definitions.Where(source => source.Class is not ("PersistenceDataAsset" or "OptionalPersistenceDataAsset")).ToArray();
+        // A shared ID with another or unknown definition kind has no unambiguous currency default.
+        var currency = !wide && items.Length > 0 && items.All(source =>
+            string.Equals(source.ItemCategory, "EItemCategory::Currency", StringComparison.OrdinalIgnoreCase));
         var npcOwners = asset.Definitions.Any(source => source.Class == "NPCItemDataAsset")
             ? asset.Metadata.Where(source => source.Class == "UINPCMetaDataItem")
                 .Select(source => source.Path).ToHashSet(StringComparer.Ordinal)
@@ -80,7 +84,8 @@ internal static class CatalogCsv
             .Select(image => (Image: image, Priority: Array.FindIndex(fields,
                 field => field.Equals(image.Field, StringComparison.OrdinalIgnoreCase))))
             .Where(choice => choice.Priority >= 0)
-            .OrderBy(choice => choice.Priority)
+            .OrderBy(choice => !(currency && choice.Image.Field.Equals("TinyIcon", StringComparison.OrdinalIgnoreCase)))
+            .ThenBy(choice => choice.Priority)
             .ThenBy(choice => !npcOwners.Contains(choice.Image.Source))
             .ThenBy(choice => choice.Image.Source, StringComparer.Ordinal)
             .ThenBy(choice => choice.Image.File, StringComparer.Ordinal)

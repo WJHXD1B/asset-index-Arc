@@ -20,7 +20,7 @@ internal sealed class IdentityContext(DecodedEvidence evidence, IdentitySchemas 
     [
         "AssetId", "bOverrideItemAssetId", "OverrideItemAssetId", "bOverrideAssetId", "OverrideAssetId",
         "PersistenceDataAsset", "PlayerStatsRaiderTargetDataAsset", "InteractQuestDataAsset",
-        "WorldQuestDataAsset", "XPEventCategoryDataAsset", "Asset"
+        "WorldQuestDataAsset", "XPEventCategoryDataAsset", "Asset", "ItemCategory"
     ];
 
     public IdentitySchema Schema(string path) => schemas.Schema(path);
@@ -50,6 +50,8 @@ internal sealed class IdentityContext(DecodedEvidence evidence, IdentitySchemas 
                 Require(String(source, "class").Equals(schema.SourceClass, StringComparison.OrdinalIgnoreCase),
                     "Catalog source class differs from decoded identity evidence.");
                 Require(schema.IsA("UIMetaDataItem") == metadata, "Catalog source has the wrong identity role.");
+                var category = source.TryGetProperty("itemCategory", out _) ? String(source, "itemCategory") : null;
+                Require(category == ItemCategory(path), "Catalog item category differs from typed object evidence.");
                 var actual = metadata ? MetadataId(path, definitions) : DefinitionId(path, definitions);
                 Require(actual == expected, $"Catalog ID differs from typed identity evidence at {path}.");
                 Require(declared.TryAdd(path, (expected, metadata)), $"Catalog repeats source identity: {path}.");
@@ -74,6 +76,17 @@ internal sealed class IdentityContext(DecodedEvidence evidence, IdentitySchemas 
 
     public long? DefinitionId(string path) => DefinitionId(path, null);
     public long? MetadataId(string path) => MetadataId(path, null);
+
+    public string? ItemCategory(string path)
+    {
+        var schema = Schema(path);
+        if (!schema.IsA("ItemDataAsset") || schema.Property("ItemCategory", "EnumProperty") is null) return null;
+        var field = Field(path, "ItemCategory", "EnumProperty");
+        if (field is null) return null;
+        var value = field.Value("name");
+        Require(value.Type == "EnumProperty" && !string.IsNullOrEmpty(value.Value), "Malformed item category enum.");
+        return value.Value;
+    }
 
     private long? DefinitionId(string path, IReadOnlySet<string>? definitions)
     {

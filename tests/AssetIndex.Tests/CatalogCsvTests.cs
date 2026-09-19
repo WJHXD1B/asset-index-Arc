@@ -90,6 +90,49 @@ public sealed class CatalogCsvTests
     }
 
     [Theory]
+    [InlineData("EItemCategory::Currency", "flat.png")]
+    [InlineData("EItemCategory::Weapon", "icon.png")]
+    [InlineData(null, "icon.png")]
+    public void CurrencyUsesAuthoredTinyIconWithoutChangingVariantsOrWideSelection(string? category, string expected)
+    {
+        var asset = Asset() with
+        {
+            Definitions = [Asset().Definitions[0] with { ItemCategory = category }],
+            Images = [Image("Icon", "Owner", "icon.png"), Image("TinyIcon", "Owner", "flat.png", 256, 256),
+                Image("BigIcon", "Owner", "wide.png", 1024, 512)]
+        };
+        var original = JsonSerializer.Serialize(asset, Snapshot.Json);
+        Assert.Equal(expected, Row(asset)[4]);
+        Assert.Equal("wide.png", Row(asset)[5]);
+        Assert.Equal(Row(asset), Row(asset with { Images = asset.Images.Reverse().ToArray() }));
+        Assert.Equal(original, JsonSerializer.Serialize(asset, Snapshot.Json));
+    }
+
+    [Fact]
+    public void CurrencyWithoutAnExportedTinyIconFallsBackToNormalImagePriority()
+    {
+        var asset = Asset() with
+        {
+            Definitions = [Asset().Definitions[0] with { ItemCategory = "EItemCategory::Currency" }],
+            Images = [Image("Icon", "Owner", "icon.png"), Image("TinyIcon", "Owner", "flat.png") with { Status = "failed" }]
+        };
+        Assert.Equal("icon.png", Row(asset)[4]);
+        Assert.Equal("icon.png", Row(asset with { Images = asset.Images.Take(1).ToArray() })[4]);
+    }
+
+    [Fact]
+    public void ConflictingDefinitionCategoriesKeepNormalPriorityAndMetadataCannotSupplyCategory()
+    {
+        var currency = Asset().Definitions[0] with { ItemCategory = "EItemCategory::Currency" };
+        var weapon = new ObjectReference("Other", "ItemDataAsset", "/Game/Other.Other") { ItemCategory = "EItemCategory::Weapon" };
+        var images = new[] { Image("Icon", "Owner", "icon.png"), Image("TinyIcon", "Owner", "flat.png") };
+        Assert.Equal("icon.png", Row(Asset() with { Definitions = [currency, weapon], Images = images })[4]);
+        Assert.Equal("icon.png", Row(Asset() with { Definitions = [currency, weapon with { ItemCategory = null }], Images = images })[4]);
+        Assert.Equal("icon.png", Row(Asset() with { Metadata = [currency], Images = images })[4]);
+        Assert.Equal("flat.png", Row(Asset() with { Definitions = [currency, new("Identity", "PersistenceDataAsset", "/Game/Identity.Identity")], Images = images })[4]);
+    }
+
+    [Theory]
     [InlineData(512, 512, "")]
     [InlineData(512, 1024, "")]
     [InlineData(1024, 512, "big.png")]

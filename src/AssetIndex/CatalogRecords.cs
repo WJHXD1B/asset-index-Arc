@@ -2,7 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace AssetIndex;
 
-internal sealed record ObjectReference(string Name, string Class, string Path);
+internal sealed record ObjectReference(string Name, string Class, string Path)
+{
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ItemCategory { get; init; }
+}
 internal sealed record Translation(string Locale, string DisplayName, string Description);
 internal sealed record ContainerPresentation(string Role, string ContainerType, string FramePath,
     int ContainerIndex, string SlotPath, string? ContainerPath, string MetadataPath);

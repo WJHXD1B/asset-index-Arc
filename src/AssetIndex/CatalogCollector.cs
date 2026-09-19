@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using CUE4Parse.MappingsProvider;
 using CUE4Parse.UE4.Assets.Exports;
+using CUE4Parse.UE4.Assets.Objects.Properties;
 using CUE4Parse.UE4.Objects.UObject;
 
 namespace AssetIndex;
@@ -59,8 +60,20 @@ internal sealed class CatalogCollector(TypeMappings mappings, Func<UObject, Obje
     }
 
     private CatalogSource Capture(UObject source) => new(
-        new(source.Name, source.ExportType, ObjectMetadata.Path(source)), Text.Capture(source, mappings, issues),
+        new(source.Name, source.ExportType, ObjectMetadata.Path(source)) { ItemCategory = ReadItemCategory(source) },
+        Text.Capture(source, mappings, issues),
         Images.Capture(source, mappings, locate, issues));
+
+    private string? ReadItemCategory(UObject source)
+    {
+        var schema = ClassSchema.Read(source, mappings);
+        if (!schema.IsA("ItemDataAsset") || !schema.HasProperty("ItemCategory", "EnumProperty")) return null;
+        var field = Properties.Find(source, "ItemCategory");
+        if (field is null) return null;
+        if (field.Tag is not EnumProperty category || string.IsNullOrEmpty(category.Value.Text))
+            throw new InvalidDataException("ItemCategory is not a decoded enum value.");
+        return category.Value.Text;
+    }
 
     private static CatalogSource[] Sorted(Dictionary<long, Dictionary<string, CatalogSource>> rows, long id) =>
         rows.GetValueOrDefault(id)?.Values.OrderBy(source => source.Reference.Path, StringComparer.Ordinal).ToArray() ?? [];

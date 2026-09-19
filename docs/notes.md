@@ -29,6 +29,10 @@ Every exported resource is retained even without a catalog owner. Original
 texture names and package paths determine PNG paths; an ingredient texture is not
 substituted for an unsupported finished material icon.
 
+Definitions optionally retain the authored `itemCategory` enum. Currency CSV
+defaults prefer `TinyIcon`, falling back to normal image priority; mixed or unknown
+definition categories keep normal priority. JSON retains every image variant.
+
 ## Evidence and validation
 
 Archive read priority determines package selection. Equal-priority copies must

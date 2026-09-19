@@ -8,7 +8,7 @@ internal static class ReferencePolicy
         {
             "AssetId", "bOverrideItemAssetId", "OverrideItemAssetId", "bOverrideAssetId", "OverrideAssetId",
             "PersistenceDataAsset", "PlayerStatsRaiderTargetDataAsset", "InteractQuestDataAsset",
-            "WorldQuestDataAsset", "XPEventCategoryDataAsset", "Asset",
+            "WorldQuestDataAsset", "XPEventCategoryDataAsset", "Asset", "ItemCategory",
             "Containers", "ContainerType", "DefaultContainer", "Tags", "ItemsQuery", "TypeTag",
             "CharacterCustomizationTypeTag", "AllowedContainersQuery", "ContainerName", "DisplayName"
         }.Concat(InventoryRootPolicy.Categories.Keys).Concat(TextRolePolicy.PropertyNames)

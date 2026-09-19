@@ -53,8 +53,8 @@ internal sealed record Preview(SnapshotFiles Snapshot) : IDisposable
             Require(ids.Add(id), $"Duplicate asset ID: {id}");
             Require(asset.GetProperty("definitions").GetArrayLength() > 0, $"Asset {id} has no publishable definition.");
             var sources = new HashSet<string>(StringComparer.Ordinal);
-            ValidateSources(asset.GetProperty("definitions"), sources, objectExists);
-            ValidateSources(asset.GetProperty("metadata"), sources, objectExists);
+            ValidateSources(asset.GetProperty("definitions"), sources, objectExists, definition: true);
+            ValidateSources(asset.GetProperty("metadata"), sources, objectExists, definition: false);
             Require(sources.Count > 0, $"Asset {id} has no sources.");
             PresentationChecks.Validate(asset, sources, objectExists);
             var english = LocalizedTextChecks.Validate(asset.GetProperty("text"), localizations, asset.GetProperty("presentation"));
@@ -71,11 +71,16 @@ internal sealed record Preview(SnapshotFiles Snapshot) : IDisposable
         CheckCount(report, "loaded", candidates);
     }
 
-    private static void ValidateSources(JsonElement sources, HashSet<string> paths, Func<string, bool> objectExists)
+    private static void ValidateSources(JsonElement sources, HashSet<string> paths, Func<string, bool> objectExists, bool definition)
     {
         foreach (var source in sources.EnumerateArray())
         {
-            Fields(source, "name", "class", "path");
+            if (definition && source.TryGetProperty("itemCategory", out _))
+            {
+                Fields(source, "name", "class", "path", "itemCategory");
+                String(source, "itemCategory");
+            }
+            else Fields(source, "name", "class", "path");
             Require(!string.IsNullOrWhiteSpace(String(source, "name")) && !string.IsNullOrWhiteSpace(String(source, "class")), "Source names and classes must not be blank.");
             var path = String(source, "path");
             Require(path.StartsWith('/') && !path.Any(char.IsControl) && paths.Add(path) && objectExists(path), "Invalid or duplicate source path.");
