@@ -68,7 +68,7 @@ validated export, retained for one day; `publish=true` also updates `data` and i
 snapshot tag atomically. Game files, authentication logs and full discovery
 records are excluded. Let an active update finish before dispatching another.
 
-External automation should dispatch on `main` with `automated=true`,
+Automatic checks are dispatched externally on `main` with `automated=true`,
 `force=false` and `publish=true`. Automated dispatches obey `ASSET_UPDATES_ENABLED`
 when planning and publishing, skip published releases and retain the retry cooldown.
 They cannot force extraction; ordinary manual runs remain available while paused.
@@ -82,10 +82,8 @@ Maintainer setup:
 4. Verify a manual publication, then set `ASSET_UPDATES_ENABLED=true` for automatic
    updates. Ordinary manual runs work while that flag is unset.
 
-The schedule checks every five minutes and extracts only unpublished Steam
-releases using the latest tested source release. GitHub may delay or skip checks;
-schedules can be disabled after 60 days without repository activity. Failed
-attempts have a one-hour cooldown before retry.
+Each extraction uses the latest tested source release. Failed attempts have a
+one-hour retry cooldown.
 
 For local publication and the validation contract, see
 [implementation notes](docs/notes.md#local-publication).
