@@ -14,8 +14,9 @@ public sealed partial class PublisherTests
 
         using var accepted = Preview.Read(preview);
         using var snapshot = DataSnapshot.Create(accepted);
-        var coverage = JsonNode.Parse(File.ReadAllText(snapshot.Files["coverage.json"].Path))!;
-        Assert.Equal(1, coverage["exploration"]!["unmappedNonCatalogExports"]!.GetValue<int>());
+        var coverage = JsonNode.Parse(File.ReadAllText(accepted.Files["coverage.json"].Path))!;
+        Assert.Equal(1, coverage["discovery"]!["unmappedNonCatalogExports"]!.GetValue<int>());
+        Assert.DoesNotContain("coverage.json", snapshot.Files.Keys);
     }
 
     [Theory]

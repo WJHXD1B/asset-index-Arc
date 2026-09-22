@@ -24,9 +24,9 @@ public sealed partial class PublisherTests
 
         Assert.True(result.Changed);
         Assert.Equal(original, HashFiles(preview));
-        using var coverage = JsonDocument.Parse(remoteGit.Run("show", "refs/heads/data:coverage.json"));
-        Assert.Equal(3, coverage.RootElement.GetProperty("formatVersion").GetInt32());
-        Assert.Equal(1, coverage.RootElement.GetProperty("exploration").GetProperty(hard ? "unavailableHardReferences" : "unavailableSoftReferences").GetInt32());
+        using var coverage = JsonDocument.Parse(File.ReadAllText(Path.Combine(preview, "coverage.json")));
+        Assert.Equal(1, coverage.RootElement.GetProperty("discovery").GetProperty(hard ? "unavailableHardReferences" : "unavailableSoftReferences").GetInt32());
+        Assert.DoesNotContain("coverage.json", remoteGit.Run("ls-tree", "-r", "refs/heads/data"));
         Assert.DoesNotContain("discovery/", remoteGit.Run("ls-tree", "-r", "refs/heads/data"));
         Assert.DoesNotContain(AbsentTarget, coverage.RootElement.GetRawText());
     }
@@ -234,8 +234,9 @@ public sealed partial class PublisherTests
         var result = Publisher.Publish(preview, remote, NextExtractor, "456");
 
         Assert.True(result.Changed);
-        using var coverage = JsonDocument.Parse(remoteGit.Run("show", "refs/heads/data:coverage.json"));
-        Assert.Equal(1, coverage.RootElement.GetProperty("exploration").GetProperty("unavailableSoftReferences").GetInt32());
+        using var coverage = JsonDocument.Parse(File.ReadAllText(Path.Combine(preview, "coverage.json")));
+        Assert.Equal(1, coverage.RootElement.GetProperty("discovery").GetProperty("unavailableSoftReferences").GetInt32());
+        Assert.DoesNotContain("coverage.json", remoteGit.Run("ls-tree", "-r", "refs/heads/data"));
     }
 
     [Theory]

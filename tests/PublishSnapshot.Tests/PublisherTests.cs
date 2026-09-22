@@ -87,7 +87,8 @@ public sealed partial class PublisherTests : IDisposable
         Assert.Equal(initialDigest, ReadMetadata(result.Commit).ContentSha256);
         Assert.Equal(Publisher.Tag("18446744073709551615", initialDigest), result.Tag);
         Assert.Equal(NextExtractor, ReadMetadata(result.Commit).ExtractorCommit);
-        Assert.DoesNotContain("Private scan description", remoteGit.Run("show", result.Commit + ":coverage.json"));
+        Assert.DoesNotContain("coverage.json", remoteGit.Run("ls-tree", "-r", "--name-only", result.Commit));
+        Assert.Contains("Private scan description", File.ReadAllText(Path.Combine(preview, "coverage.json")));
     }
 
     [Fact]

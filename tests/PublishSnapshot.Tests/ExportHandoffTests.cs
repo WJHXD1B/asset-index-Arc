@@ -99,9 +99,7 @@ public sealed partial class PublisherTests
     [InlineData("discovery-directory")]
     [InlineData("missing-file")]
     [InlineData("changed-payload")]
-    [InlineData("changed-coverage")]
-    [InlineData("private-coverage")]
-    [InlineData("valid-coverage-change")]
+    [InlineData("unexpected-coverage")]
     [InlineData("metadata-bytes")]
     [InlineData("file-link")]
     [InlineData("directory-link")]
@@ -123,10 +121,8 @@ public sealed partial class PublisherTests
             case "discovery-directory": Directory.CreateDirectory(Path.Combine(directory, "discovery")); break;
             case "missing-file": File.Delete(Path.Combine(directory, "assets.json")); break;
             case "changed-payload": File.AppendAllText(Path.Combine(directory, "assets.json"), " "); break;
-            case "changed-coverage": ChangeExportJson(directory, "coverage.json", json => json["images"] = 0); break;
-            case "valid-coverage-change": ChangeExportJson(directory, "coverage.json", json => json["noticeCount"] = 1); break;
+            case "unexpected-coverage": File.Copy(Path.Combine(preview, "coverage.json"), Path.Combine(directory, "coverage.json")); break;
             case "metadata-bytes": File.AppendAllText(Path.Combine(directory, "metadata.json"), " "); break;
-            case "private-coverage": ChangeExportJson(directory, "coverage.json", json => json["privateDetails"] = "private"); break;
             case "file-link":
                 File.Delete(Path.Combine(directory, "assets.json"));
                 File.CreateSymbolicLink(Path.Combine(directory, "assets.json"), Path.Combine(preview, "assets.json"));
@@ -198,14 +194,12 @@ public sealed partial class PublisherTests
         Assert.Equal(metadata, ReadMetadata(RemoteRef("refs/heads/data")));
     }
 
-    [Theory]
-    [InlineData("coverage.json")]
-    [InlineData("metadata.json")]
-    public void PublicExportDigestIncludesBytesExcludedFromDatasetIdentity(string file)
+    [Fact]
+    public void PublicExportDigestIncludesMetadataBytesExcludedFromDatasetIdentity()
     {
         var (directory, metadata) = Handoff();
         var original = HandoffDigest(directory);
-        File.AppendAllText(Path.Combine(directory, file), " ");
+        File.AppendAllText(Path.Combine(directory, "metadata.json"), " ");
         using var changed = SnapshotFiles.CapturePublic(directory);
 
         Assert.NotEqual(original, ContentDigest.ExportFiles(changed.Files));
@@ -239,15 +233,15 @@ public sealed partial class PublisherTests
     }
 
     [Fact]
-    public void PublicExportRejectsGitTransformingCoverageAfterValidation()
+    public void PublicExportRejectsGitTransformingMetadataAfterValidation()
     {
-        File.WriteAllText(Path.Combine(seed, ".gitattributes"), "coverage.json text eol=lf\n");
+        File.WriteAllText(Path.Combine(seed, ".gitattributes"), "metadata.json text eol=lf\n");
         var git = new Git(seed);
         Commit(git);
         git.Run("push", "--quiet", "origin", "HEAD:refs/heads/data");
         var (directory, _) = Handoff();
-        var coverage = Path.Combine(directory, "coverage.json");
-        File.WriteAllText(coverage, File.ReadAllText(coverage).Replace("\n", "\r\n"));
+        var metadata = Path.Combine(directory, "metadata.json");
+        File.WriteAllText(metadata, File.ReadAllText(metadata).Replace("\n", "\r\n"));
         var references = remoteGit.Run("show-ref");
 
         var error = Assert.Throws<InvalidDataException>(() => Publisher.PublishExport(directory, remote,

@@ -70,12 +70,12 @@ game coverage.
 Validation uses a private disk copy so later input changes cannot alter the
 validated payload. Full discovery streams stay out of published snapshots.
 Generated output includes both CSVs, catalog, resources, all exported PNGs,
-localization, coverage and metadata. Each published file must fit GitHub's 100 MiB
-blob limit.
+localization and metadata. Coverage reports stay in the development preview.
+Each published file must fit GitHub's 100 MiB blob limit.
 
 Public CI validates the full preview before transferring its public export to a
 fresh publisher job. `--export-digest` hashes every exported file, including
-coverage and metadata; this handoff hash is separate from data identity below.
+metadata; this handoff hash is separate from data identity below.
 `--publish-export` requires that hash, the source/Steam identities and the previously
 observed metadata Git blob. It rechecks public structure and exact bytes; original
 object evidence was checked upstream. Never accept this digest from an untrusted
@@ -99,8 +99,8 @@ run or execute files from the transferred artifact.
 ```
 
 Data tags are `arc-<manifestId>-<contentSha25612>`. The full hash covers the sorted
-published-content Git blob inventory, excluding coverage and metadata. Source and
-docs live on `main`. Atomic data/tag updates reject concurrent data writers;
+published-content Git blob inventory, excluding metadata and historical coverage
+reports. Source and docs live on `main`. Atomic data/tag updates reject concurrent data writers;
 existing tags are checked and never replaced. Matching manifest/content is a
 no-op; changes on `main` do not move the data branch. The tag's
 snapshot metadata retains the extractor commit that produced that content.
@@ -162,9 +162,8 @@ dotnet run --project src/PublishSnapshot -c Release -- \
   <preview-directory> <remote> <extractor-commit> <Steam-manifest-id>
 ```
 
-Public `coverage.json` contains verified output counts and aggregate unresolved
-reference/schema counts. `images` counts IDs with an exported image; discovery
-`resources` counts exported image resources. English name/description counts use
-resolved English translations and can differ from CSV source-text fallbacks.
-A successful status means validation passed, not that every game object has a
-name or that all game content was decoded. Full preview diagnostics stay local.
+Development `coverage.json` records extraction counts and diagnostics. The full
+preview must pass coverage and completeness checks before export; the report is
+never copied to the public export or new data snapshots. Historical snapshot tags
+remain unchanged. Successful validation does not mean every game object has a
+name or all game content was decoded.

@@ -118,7 +118,7 @@ internal static class Publisher
                 "Published metadata changed since extraction was planned; retry against the current snapshot.");
         foreach (var entry in entries) File.Delete(Path.Combine(directory, entry.Path));
         WriteSnapshot(directory, files, metadata);
-        var expectedMetadata = git.Run("hash-object", "--no-filters", "coverage.json", "metadata.json");
+        var expectedMetadata = git.Run("hash-object", "--no-filters", "metadata.json").Trim();
         var roots = entries.Select(entry => entry.Path).Concat(files.Keys).Append("metadata.json")
             .Select(path => path.Split('/')[0]).Distinct(StringComparer.Ordinal).ToArray();
         git.Run(["add", "--force", "--all", "--", .. roots]);
@@ -126,8 +126,7 @@ internal static class Publisher
         var stagedEntries = GeneratedTree(git, staged);
         Preview.Require(ContentDigest.Tree(stagedEntries) == metadata.ContentSha256,
             "Git transformed generated content; publication was not attempted.");
-        var stagedMetadata = string.Concat(new[] { "coverage.json", "metadata.json" }
-            .Select(path => stagedEntries.Single(entry => entry.Path == path).ObjectId + "\n"));
+        var stagedMetadata = stagedEntries.Single(entry => entry.Path == "metadata.json").ObjectId;
         Preview.Require(stagedMetadata == expectedMetadata,
             "Git transformed generated metadata; publication was not attempted.");
         if (git.Run("diff", "--cached", "--name-only").Length > 0)
@@ -166,10 +165,10 @@ internal static class Publisher
         return result.ToArray();
     }
 
-    private static bool Reserved(string path) => DataSnapshot.Required.Contains(path) || path is "metadata.json" or "schema.json" or "images" or "localization" ||
+    private static bool Reserved(string path) => DataSnapshot.Required.Contains(path) || path is "coverage.json" or "metadata.json" or "schema.json" or "images" or "localization" ||
         path.StartsWith("images/", StringComparison.Ordinal) || path.StartsWith("localization/", StringComparison.Ordinal);
 
-    private static bool LegacyGenerated(string path) => path is "metadata.json" or "schema.json" ||
+    private static bool LegacyGenerated(string path) => path is "coverage.json" or "metadata.json" or "schema.json" ||
         Regex.IsMatch(path, @"\Aimages/[A-Za-z0-9_-]+\.png\z", RegexOptions.CultureInvariant);
 
     internal static string Tag(string manifest, string contentSha256) => $"arc-{manifest}-{contentSha256[..12]}";

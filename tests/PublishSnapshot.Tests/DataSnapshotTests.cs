@@ -33,13 +33,10 @@ public sealed partial class PublisherTests
         Assert.Equal(File.ReadAllText(Path.Combine(preview, "assets.json")), remoteGit.Run("show", result.Commit + ":assets.json"));
         Assert.True(File.Exists(Path.Combine(preview, unowned)));
         Assert.True(File.Exists(Path.Combine(preview, "discovery/objects.jsonl.gz")));
-        using var coverage = JsonDocument.Parse(remoteGit.Run("show", result.Commit + ":coverage.json"));
-        Assert.Equal(3, coverage.RootElement.GetProperty("formatVersion").GetInt32());
-        Assert.All(coverage.RootElement.GetProperty("exploration").EnumerateObject(), field => Assert.Equal(0, field.Value.GetInt32()));
-        Assert.Equal(0, coverage.RootElement.GetProperty("issueCounts").GetProperty("total").GetInt32());
-        Assert.False(coverage.RootElement.TryGetProperty("issues", out _));
-        Assert.False(coverage.RootElement.TryGetProperty("notices", out _));
-        Assert.False(coverage.RootElement.GetProperty("discovery").TryGetProperty("nativeScope", out _));
+        Assert.DoesNotContain("coverage.json", remoteGit.Run("ls-tree", "-r", "--name-only", result.Commit));
+        using var coverage = JsonDocument.Parse(File.ReadAllText(Path.Combine(preview, "coverage.json")));
+        Assert.Empty(coverage.RootElement.GetProperty("issues").EnumerateArray());
+        Assert.Equal(3, coverage.RootElement.GetProperty("discovery").GetProperty("resources").GetInt32());
     }
 
     [Fact]

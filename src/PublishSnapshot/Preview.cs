@@ -21,7 +21,14 @@ internal sealed record Preview(SnapshotFiles Snapshot) : IDisposable
             Require(coverage.RootElement.GetProperty("status").GetString() == "succeeded", "Preview is incomplete.");
             Require(coverage.RootElement.GetProperty("issues").GetArrayLength() == 0, "Preview has diagnostics.");
             var evidence = ResourceEvidence.Read(snapshot.Files, coverage.RootElement);
-            ValidateCatalog(assets.RootElement, coverage.RootElement, evidence.Localizations, evidence.Resources, evidence.ObjectPaths.Contains);
+            var counts = ValidateCatalog(assets.RootElement, evidence.Localizations, evidence.Resources, evidence.ObjectPaths.Contains);
+            CheckCount(coverage.RootElement, "assetIds", counts.AssetIds);
+            CheckCount(coverage.RootElement, "englishNames", counts.EnglishNames);
+            CheckCount(coverage.RootElement, "descriptions", counts.Descriptions);
+            CheckCount(coverage.RootElement, "images", counts.Images);
+            var candidates = coverage.RootElement.GetProperty("candidates").GetInt32();
+            Require(candidates > 0 && coverage.RootElement.GetProperty("registeredAssets").GetInt32() > 0, "Discovery counts must be positive.");
+            CheckCount(coverage.RootElement, "loaded", candidates);
             TextOriginChecks.Validate(assets.RootElement, snapshot.Files["discovery/objects.jsonl.gz"]);
             SemanticChecks.Validate(assets.RootElement, snapshot.Files, coverage.RootElement);
             CsvChecks.Validate(assets.RootElement, snapshot.Files);
@@ -36,7 +43,7 @@ internal sealed record Preview(SnapshotFiles Snapshot) : IDisposable
         return JsonDocument.Parse(stream);
     }
 
-    internal static void ValidateCatalog(JsonElement assets, JsonElement report,
+    internal static (int AssetIds, int EnglishNames, int Descriptions, int Images) ValidateCatalog(JsonElement assets,
         IReadOnlyList<LocalizationEvidence> localizations, IReadOnlyDictionary<string, ResourceImage> resources,
         Func<string, bool> objectExists)
     {
@@ -62,13 +69,7 @@ internal sealed record Preview(SnapshotFiles Snapshot) : IDisposable
             if (english.Description) descriptions++;
             if (ValidateImages(asset.GetProperty("images"), sources, resources)) illustrated++;
         }
-        CheckCount(report, "assetIds", ids.Count);
-        CheckCount(report, "englishNames", names);
-        CheckCount(report, "descriptions", descriptions);
-        CheckCount(report, "images", illustrated);
-        var candidates = report.GetProperty("candidates").GetInt32();
-        Require(candidates > 0 && report.GetProperty("registeredAssets").GetInt32() > 0, "Discovery counts must be positive.");
-        CheckCount(report, "loaded", candidates);
+        return (ids.Count, names, descriptions, illustrated);
     }
 
     private static void ValidateSources(JsonElement sources, HashSet<string> paths, Func<string, bool> objectExists, bool definition)

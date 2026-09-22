@@ -11,13 +11,13 @@ internal static class ContentDigest
     internal sealed record Entry(string Mode, string ObjectId, string Path);
 
     public static string Files(IReadOnlyDictionary<string, SnapshotFile> files) => Calculate(files
-        .Where(pair => DataSnapshot.Payload(pair.Key))
+        .Where(pair => DataSnapshot.Allowed(pair.Key))
         .Select(pair => new Entry("100644", BlobId(pair.Value), pair.Key)));
 
-    public static string Tree(IEnumerable<Entry> entries) => Calculate(entries.Where(entry => DataSnapshot.Payload(entry.Path)));
+    public static string Tree(IEnumerable<Entry> entries) => Calculate(entries.Where(entry => DataSnapshot.Allowed(entry.Path)));
 
-    // The job handoff includes exact coverage and metadata bytes. Dataset identity
-    // intentionally excludes those files so diagnostic changes do not version data.
+    // The job handoff includes exact metadata bytes. Dataset identity excludes
+    // metadata so provenance changes do not version the payload.
     public static string ExportFiles(IReadOnlyDictionary<string, SnapshotFile> files) => Calculate(files
         .Select(pair => new Entry("100644", BlobId(pair.Value), pair.Key)), "asset-index-export-v1\n");
 
