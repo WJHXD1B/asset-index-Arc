@@ -48,6 +48,11 @@ elif command == "sleep":
     time.sleep(0.01)
 elif command == "git":
     print(os.environ["MOCK_SOURCE_SHA"])
+elif command == "python3":
+    if args[0].endswith("/report-failure.py") and os.environ.get("MOCK_SUMMARY_EXIT"):
+        print("private-dummy summary error", file=sys.stderr)
+        sys.exit(int(os.environ["MOCK_SUMMARY_EXIT"]))
+    os.execv(sys.executable, [sys.executable, *args])
 elif command == "mountpoint":
     sys.exit(0 if (temp / "ready").exists() else 1)
 elif command == "fusermount3":
@@ -63,6 +68,10 @@ elif command == "dotnet":
         sys.exit(int(os.environ["MOCK_AUTH_EXIT"]))
     record("extract", credentials=credentials(), args=args[1:])
     print("private-dummy extraction diagnostics")
+    if os.environ.get("MOCK_COVERAGE"):
+        output = Path(args[args.index("--output") + 1])
+        output.mkdir()
+        (output / "coverage.json").write_text(os.environ["MOCK_COVERAGE"])
     if os.environ.get("MOCK_EXTRACT_WAIT") == "true":
         while True:
             time.sleep(0.01)
@@ -135,7 +144,7 @@ class PreviewTests(unittest.TestCase):
             temp = Path(directory)
             binaries = temp / "bin"
             binaries.mkdir()
-            for name in ["dotnet", "timeout", "mountpoint", "fusermount3", "sleep", "git", "SteamDepotFs"]:
+            for name in ["dotnet", "timeout", "mountpoint", "fusermount3", "sleep", "git", "python3", "SteamDepotFs"]:
                 mock = binaries / name
                 mock.write_text(f"#!{sys.executable}\n" + MOCK)
                 mock.chmod(0o755)
@@ -158,6 +167,8 @@ class PreviewTests(unittest.TestCase):
                 "MOCK_ANNOUNCEMENT": announcement,
                 "MOCK_MOUNT_EXIT": "0",
                 "MOCK_EXTRACT_EXIT": "0",
+                "MOCK_COVERAGE": "",
+                "MOCK_SUMMARY_EXIT": "",
                 "MOCK_READY": "true",
                 "MOCK_UNMOUNT_FAIL": "false",
                 **overrides,
@@ -237,9 +248,38 @@ class PreviewTests(unittest.TestCase):
                 self.assertEqual(sum(event["event"] == "cleanup" for event in events), 1)
 
     def test_extractor_failure_preserves_exit_status_and_cleans_mount(self):
-        status, events, _ = self.run_preview(MOCK_EXTRACT_EXIT="23")
+        status, events, output = self.run_preview(MOCK_EXTRACT_EXIT="23")
         self.assertEqual(status, 23)
+        self.assertIn("Extraction issue counts unavailable.", output)
         self.assertEqual([event["event"] for event in events][-2:], ["cleanup", "mount-stopped"])
+
+    def test_failure_summary_exposes_only_allowlisted_stage_counts(self):
+        report = {"status": "private-dummy", "issues": [
+            {"stage": stage, "path": "private-dummy", "message": "private-dummy"}
+            for stage in ["decode", "decode", "evidence", "metadata", "package", "parser", "package", "private-dummy", "other"]
+        ], "private-dummy": "private-dummy"}
+        status, _, output = self.run_preview(MOCK_EXTRACT_EXIT="23", MOCK_COVERAGE=json.dumps(report))
+        self.assertEqual(status, 23)
+        self.assertIn("Extraction issue counts: decode=2, evidence=1, metadata=1, package=2, parser=1, other=2.", output)
+
+    def test_invalid_failure_report_is_never_printed(self):
+        for report in ["private-dummy", "[]", "{}", '{"issues": "private-dummy"}',
+                       '{"issues": ["private-dummy"]}', '{"issues": [{"stage": ["private-dummy"]}]}']:
+            with self.subTest(report=report):
+                status, _, output = self.run_preview(MOCK_EXTRACT_EXIT="23", MOCK_COVERAGE=report)
+                self.assertEqual(status, 23)
+                self.assertIn("Extraction issue counts unavailable.", output)
+
+    def test_summary_failure_preserves_extractor_exit_status(self):
+        status, events, output = self.run_preview(MOCK_EXTRACT_EXIT="23", MOCK_SUMMARY_EXIT="7")
+        self.assertEqual(status, 23)
+        self.assertIn("Extraction issue counts unavailable.", output)
+        self.assertEqual([event["event"] for event in events][-2:], ["cleanup", "mount-stopped"])
+
+    def test_success_does_not_print_failure_summary(self):
+        status, _, output = self.run_preview(MOCK_COVERAGE='{"issues": []}')
+        self.assertEqual(status, 0)
+        self.assertNotIn("Extraction issue counts", output)
 
     def test_cleanup_failure_prevents_publication_and_never_traverses_live_mount(self):
         status, events, output = self.run_preview(MOCK_UNMOUNT_FAIL="true")

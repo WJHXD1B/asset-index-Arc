@@ -84,6 +84,9 @@ if timeout --foreground --kill-after=15s 120m dotnet "$source_dir/src/AssetIndex
   echo 'Extraction completed; full validation and public export follow.'
 else
   result=$?
+  timeout --foreground --kill-after=5s 20s python3 "$source_dir/scripts/steam/report-failure.py" \
+    "$RUNNER_TEMP/asset-index-preview/coverage.json" 2>/dev/null || \
+    echo 'Extraction issue counts unavailable.'
   echo 'Extraction failed. Reproduce locally to inspect diagnostics.' >&2
   exit "$result"
 fi

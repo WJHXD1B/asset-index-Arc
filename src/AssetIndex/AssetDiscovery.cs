@@ -31,8 +31,10 @@ internal static class AssetDiscovery
 
     internal static string DescribeError(Exception error)
     {
-        var cause = error.GetBaseException().Message;
-        return cause == error.Message ? error.Message : $"{error.Message} Cause: {cause}";
+        var messages = new List<string>();
+        for (Exception? cause = error; cause is not null; cause = cause.InnerException)
+            if (!messages.Contains(cause.Message)) messages.Add(cause.Message);
+        return string.Join(" Cause: ", messages);
     }
 }
 

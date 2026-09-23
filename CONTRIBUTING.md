@@ -4,6 +4,9 @@ Open code, mapping and workflow PRs against `main`. Dataset usage documentation
 lives in the `data` branch README; update it alongside format changes. The
 publisher preserves that README and replaces only generated files.
 
+Keep public documentation and PR descriptions focused on user-visible changes,
+compatibility, and validation results. Keep internal investigation details private.
+
 ## Test
 
 Initialize submodules as described in the [README](README.md#run-locally), then run
@@ -32,13 +35,16 @@ input. Inspect `coverage.json` and affected records/images even after success.
 It reports extraction counts and limitations, not a percentage of the whole game.
 Retry incomplete extraction into a new directory.
 
+A failed extraction leaves the last published snapshot unchanged. Investigate
+failures using private diagnostics.
+
 For coverage fixes, verify the game field/reference that owns the value and add
 a small synthetic regression, including empty or conflicting values. Do not
 infer labels from filenames or restore output solely because an old snapshot had it.
 
-Replace `mappings/ArcRaiders.usmap` by PR, stating its source and tested game
-build or marking compatibility untested. Keep CUE4Parse pinned upstream and run
-the relevant tests for mapping/dependency changes.
+Replace `mappings/ArcRaiders.usmap` by PR, stating the tested game build and
+validation results or marking compatibility untested. Keep CUE4Parse pinned
+upstream and run the relevant tests for mapping/dependency changes.
 
 ## Releases
 

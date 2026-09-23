@@ -8,7 +8,7 @@ internal sealed record ClassScopeDeclaration(string ClassPath, string? SuperPath
 // its missing serialized layout. It must never be installed as a schema.
 internal sealed class ClassScope(TypeMappings mappings, string? mappingSha256)
 {
-    private const string SupportedMapping = "61018eaea9fed46a1351fbdc5f7429e6f24df8f45fad576b4b15c534b1b359c4";
+    private const string SupportedMapping = "15f9d39af7b2e863b243483c3ffa1e4aa4c825c773b0fefd2647e6ac5562c544";
     private const string SensingClass = "/Script/Angelscript.AISensingStatusTransition";
     private const string WidgetClass = "/Script/UMG.WidgetBlueprintGeneratedClass";
     private const string BlueprintClass = "/Script/Engine.BlueprintGeneratedClass";

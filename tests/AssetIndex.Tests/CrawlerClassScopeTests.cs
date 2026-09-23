@@ -8,7 +8,7 @@ namespace AssetIndex.Tests;
 
 public sealed class CrawlerClassScopeTests
 {
-    private const string MappingHash = "61018eaea9fed46a1351fbdc5f7429e6f24df8f45fad576b4b15c534b1b359c4";
+    private const string MappingHash = "15f9d39af7b2e863b243483c3ffa1e4aa4c825c773b0fefd2647e6ac5562c544";
     private const string Sensing = "/Script/Angelscript.AISensingStatusTransition";
 
     [Fact]
